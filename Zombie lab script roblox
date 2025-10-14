@@ -1,0 +1,566 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local ZombieLabSccriptRoblox = Instance.new("ScreenGui")
+local BotonPrincipal = Instance.new("ImageButton")
+local UICorner = Instance.new("UICorner")
+local Panel = Instance.new("ImageLabel")
+local UIStroke = Instance.new("UIStroke")
+local UIStroke_2 = Instance.new("UIStroke")
+local UICorner_2 = Instance.new("UICorner")
+local Seleccionador = Instance.new("Frame")
+local UICorner_3 = Instance.new("UICorner")
+local Inicio = Instance.new("TextButton")
+local UICorner_4 = Instance.new("UICorner")
+local Jugador = Instance.new("TextButton")
+local UICorner_5 = Instance.new("UICorner")
+local Funciones = Instance.new("TextButton")
+local UICorner_6 = Instance.new("UICorner")
+local Ajustes = Instance.new("TextButton")
+local UICorner_7 = Instance.new("UICorner")
+local Contenido = Instance.new("Frame")
+local Funciones_2 = Instance.new("Frame")
+local Titulo = Instance.new("TextLabel")
+local Funcion1 = Instance.new("Frame")
+local Click = Instance.new("ImageLabel")
+local UICorner_8 = Instance.new("UICorner")
+local Texto = Instance.new("TextLabel")
+local Boton = Instance.new("TextButton")
+local Funcion2 = Instance.new("Frame")
+local Texto_2 = Instance.new("TextLabel")
+local Click_2 = Instance.new("ImageLabel")
+local UICorner_9 = Instance.new("UICorner")
+local Boton_2 = Instance.new("TextButton")
+local Inicio_2 = Instance.new("Frame")
+local Titulo_2 = Instance.new("TextLabel")
+local Texto_3 = Instance.new("TextLabel")
+local Jugador_2 = Instance.new("Frame")
+local Titulo_3 = Instance.new("TextLabel")
+local Funcion1_2 = Instance.new("Frame")
+local Click_3 = Instance.new("ImageLabel")
+local UICorner_10 = Instance.new("UICorner")
+local Texto_4 = Instance.new("TextLabel")
+local Boton_3 = Instance.new("TextButton")
+local Funcion2_2 = Instance.new("Frame")
+local Click_4 = Instance.new("ImageLabel")
+local UICorner_11 = Instance.new("UICorner")
+local Texto_5 = Instance.new("TextLabel")
+local Boton_4 = Instance.new("TextButton")
+local Funcion3 = Instance.new("Frame")
+local Click_5 = Instance.new("ImageLabel")
+local UICorner_12 = Instance.new("UICorner")
+local Texto_6 = Instance.new("TextLabel")
+local Boton_5 = Instance.new("TextButton")
+local Velocidad = Instance.new("TextBox")
+local UICorner_13 = Instance.new("UICorner")
+local Ajustes_2 = Instance.new("Frame")
+local Titulo_4 = Instance.new("TextLabel")
+local Funcion1_3 = Instance.new("Frame")
+local Click_6 = Instance.new("ImageLabel")
+local UICorner_14 = Instance.new("UICorner")
+local Texto_7 = Instance.new("TextLabel")
+local Boton_6 = Instance.new("TextButton")
+local Funcion2_3 = Instance.new("Frame")
+local Click_7 = Instance.new("ImageLabel")
+local UICorner_15 = Instance.new("UICorner")
+local Texto_8 = Instance.new("TextLabel")
+local Boton_7 = Instance.new("TextButton")
+local EjecutadoCorrectamente = Instance.new("Frame")
+local UICorner_16 = Instance.new("UICorner")
+
+--Properties:
+
+ZombieLabSccriptRoblox.Name = "ZombieLabSccriptRoblox"
+ZombieLabSccriptRoblox.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ZombieLabSccriptRoblox.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ZombieLabSccriptRoblox.DisplayOrder = 999999999
+ZombieLabSccriptRoblox.ResetOnSpawn = false
+
+UIStroke.Color = Color3.new(1, 1, 1)
+UIStroke.Thickness = 3
+UIStroke.Parent = Panel
+
+UIStroke_2.Color = Color3.new(1, 1, 1)
+UIStroke_2.Thickness = 2
+UIStroke_2.Parent = BotonPrincipal
+
+BotonPrincipal.Name = "BotonPrincipal"
+BotonPrincipal.Parent = ZombieLabSccriptRoblox
+BotonPrincipal.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+BotonPrincipal.BackgroundTransparency = 1.000
+BotonPrincipal.BorderColor3 = Color3.fromRGB(0, 0, 0)
+BotonPrincipal.BorderSizePixel = 0
+BotonPrincipal.Position = UDim2.new(0.475409836, 0, 0.449532062, 0)
+BotonPrincipal.Size = UDim2.new(0.0491803288, 0, 0.100765578, 0)
+BotonPrincipal.ZIndex = 999999999
+BotonPrincipal.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
+BotonPrincipal.Draggable = true
+
+UICorner.CornerRadius = UDim.new(1, 0)
+UICorner.Parent = BotonPrincipal
+
+Panel.Name = "Panel"
+Panel.Parent = ZombieLabSccriptRoblox
+Panel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Panel.BackgroundTransparency = 0.400
+Panel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Panel.BorderSizePixel = 0
+Panel.Position = UDim2.new(0.0901639313, 0, 0.0818850249, 0)
+Panel.Size = UDim2.new(0.819672108, 0, 0.835561454, 0)
+Panel.Visible = false
+Panel.Image = "rbxassetid://99370373901296"
+Panel.ImageTransparency = 1.000
+
+UICorner_2.CornerRadius = UDim.new(0, 25)
+UICorner_2.Parent = Panel
+
+Seleccionador.Name = "Seleccionador"
+Seleccionador.Parent = Panel
+Seleccionador.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Seleccionador.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Seleccionador.BorderSizePixel = 0
+Seleccionador.Position = UDim2.new(0.0144590149, 0, 0.0185962524, 0)
+Seleccionador.Size = UDim2.new(0.200000003, 0, 0.959999979, 0)
+
+UICorner_3.CornerRadius = UDim.new(0, 15)
+UICorner_3.Parent = Seleccionador
+
+Inicio.Name = "Inicio"
+Inicio.Parent = Seleccionador
+Inicio.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Inicio.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Inicio.BorderSizePixel = 0
+Inicio.Position = UDim2.new(0.0599999987, 0, 0.0250000004, 0)
+Inicio.Size = UDim2.new(0.875, 0, 0.104166664, 0)
+Inicio.Font = Enum.Font.SourceSans
+Inicio.Text = "Inicio"
+Inicio.TextColor3 = Color3.fromRGB(0, 0, 0)
+Inicio.TextScaled = true
+Inicio.TextSize = 14.000
+Inicio.TextWrapped = true
+
+UICorner_4.CornerRadius = UDim.new(0, 12)
+UICorner_4.Parent = Inicio
+
+Jugador.Name = "Jugador"
+Jugador.Parent = Seleccionador
+Jugador.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Jugador.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Jugador.BorderSizePixel = 0
+Jugador.Position = UDim2.new(0.0599999987, 0, 0.152083337, 0)
+Jugador.Size = UDim2.new(0.875, 0, 0.104166664, 0)
+Jugador.Font = Enum.Font.SourceSans
+Jugador.Text = "Jugador local"
+Jugador.TextColor3 = Color3.fromRGB(0, 0, 0)
+Jugador.TextScaled = true
+Jugador.TextSize = 14.000
+Jugador.TextWrapped = true
+
+UICorner_5.CornerRadius = UDim.new(0, 12)
+UICorner_5.Parent = Jugador
+
+Funciones.Name = "Funciones"
+Funciones.Parent = Seleccionador
+Funciones.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funciones.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funciones.BorderSizePixel = 0
+Funciones.Position = UDim2.new(0.0599999987, 0, 0.289583325, 0)
+Funciones.Size = UDim2.new(0.875, 0, 0.104166664, 0)
+Funciones.Font = Enum.Font.SourceSans
+Funciones.Text = "Funciones"
+Funciones.TextColor3 = Color3.fromRGB(0, 0, 0)
+Funciones.TextScaled = true
+Funciones.TextSize = 14.000
+Funciones.TextWrapped = true
+
+UICorner_6.CornerRadius = UDim.new(0, 12)
+UICorner_6.Parent = Funciones
+
+Ajustes.Name = "Ajustes"
+Ajustes.Parent = Seleccionador
+Ajustes.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Ajustes.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Ajustes.BorderSizePixel = 0
+Ajustes.Position = UDim2.new(0.0599999987, 0, 0.422916681, 0)
+Ajustes.Size = UDim2.new(0.875, 0, 0.104166664, 0)
+Ajustes.Font = Enum.Font.SourceSans
+Ajustes.Text = "Ajustes"
+Ajustes.TextColor3 = Color3.fromRGB(0, 0, 0)
+Ajustes.TextScaled = true
+Ajustes.TextSize = 14.000
+Ajustes.TextWrapped = true
+
+UICorner_7.CornerRadius = UDim.new(0, 12)
+UICorner_7.Parent = Ajustes
+
+Contenido.Name = "Contenido"
+Contenido.Parent = Panel
+Contenido.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Contenido.BackgroundTransparency = 11.000
+Contenido.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Contenido.BorderSizePixel = 0
+Contenido.Position = UDim2.new(0.234999999, 0, 0.018596191, 0)
+Contenido.Size = UDim2.new(0.745000005, 0, 0.959999979, 0)
+
+Funciones_2.Name = "Funciones"
+Funciones_2.Parent = Contenido
+Funciones_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Funciones_2.BackgroundTransparency = 11.000
+Funciones_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funciones_2.BorderSizePixel = 0
+Funciones_2.Position = UDim2.new(-0.00124151248, 0, 3.17891455e-08, 0)
+Funciones_2.Size = UDim2.new(0.998657703, 0, 0.997916639, 0)
+Funciones_2.Visible = false
+
+Titulo.Name = "Titulo"
+Titulo.Parent = Funciones_2
+Titulo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Titulo.BackgroundTransparency = 1.000
+Titulo.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Titulo.BorderSizePixel = 0
+Titulo.Size = UDim2.new(1, 0, 0.104384132, 0)
+Titulo.Font = Enum.Font.SourceSans
+Titulo.Text = "Funciones"
+Titulo.TextColor3 = Color3.fromRGB(255, 255, 255)
+Titulo.TextScaled = true
+Titulo.TextSize = 14.000
+Titulo.TextWrapped = true
+
+Funcion1.Name = "Funcion1"
+Funcion1.Parent = Funciones_2
+Funcion1.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion1.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion1.BorderSizePixel = 0
+Funcion1.Position = UDim2.new(0, 0, 0.129436329, 0)
+Funcion1.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Click.Name = "Click"
+Click.Parent = Funcion1
+Click.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click.BackgroundTransparency = 1.000
+Click.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click.BorderSizePixel = 0
+Click.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click.Image = "rbxassetid://9468220156"
+
+UICorner_8.CornerRadius = UDim.new(1, 0)
+UICorner_8.Parent = Funcion1
+
+Texto.Name = "Texto"
+Texto.Parent = Funcion1
+Texto.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto.BackgroundTransparency = 1.000
+Texto.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto.BorderSizePixel = 0
+Texto.Size = UDim2.new(0.922043025, 0, 1.00369358, 0)
+Texto.Font = Enum.Font.SourceSans
+Texto.Text = "Eliminar barrera de la cafetería"
+Texto.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto.TextScaled = true
+Texto.TextSize = 14.000
+Texto.TextWrapped = true
+
+Boton.Name = "Boton"
+Boton.Parent = Funcion1
+Boton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton.BackgroundTransparency = 1.000
+Boton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton.BorderSizePixel = 0
+Boton.Size = UDim2.new(1, 0, 1, 0)
+Boton.Font = Enum.Font.SourceSans
+Boton.Text = "Texto"
+Boton.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton.TextScaled = true
+Boton.TextSize = 14.000
+Boton.TextTransparency = 1.000
+Boton.TextWrapped = true
+
+Funcion2.Name = "Funcion2"
+Funcion2.Parent = Funciones_2
+Funcion2.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion2.BorderSizePixel = 0
+Funcion2.Position = UDim2.new(0, 0, 0.250521928, 0)
+Funcion2.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Texto_2.Name = "Texto"
+Texto_2.Parent = Funcion2
+Texto_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_2.BackgroundTransparency = 1.000
+Texto_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_2.BorderSizePixel = 0
+Texto_2.Size = UDim2.new(0.922043025, 0, 1.00369358, 0)
+Texto_2.Font = Enum.Font.SourceSans
+Texto_2.Text = "Activar armas chetadas (solo la pistola y el revolver)"
+Texto_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto_2.TextScaled = true
+Texto_2.TextSize = 14.000
+Texto_2.TextWrapped = true
+
+Click_2.Name = "Click"
+Click_2.Parent = Funcion2
+Click_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click_2.BackgroundTransparency = 1.000
+Click_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click_2.BorderSizePixel = 0
+Click_2.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click_2.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click_2.Image = "rbxassetid://9468220156"
+
+UICorner_9.CornerRadius = UDim.new(1, 0)
+UICorner_9.Parent = Funcion2
+
+Boton_2.Name = "Boton"
+Boton_2.Parent = Funcion2
+Boton_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton_2.BackgroundTransparency = 1.000
+Boton_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton_2.BorderSizePixel = 0
+Boton_2.Size = UDim2.new(1, 0, 1, 0)
+Boton_2.Font = Enum.Font.SourceSans
+Boton_2.Text = "Texto"
+Boton_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton_2.TextScaled = true
+Boton_2.TextSize = 14.000
+Boton_2.TextTransparency = 1.000
+Boton_2.TextWrapped = true
+
+Inicio_2.Name = "Inicio"
+Inicio_2.Parent = Contenido
+Inicio_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Inicio_2.BackgroundTransparency = 11.000
+Inicio_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Inicio_2.BorderSizePixel = 0
+Inicio_2.Position = UDim2.new(-0.00124151248, 0, 3.17891455e-08, 0)
+Inicio_2.Size = UDim2.new(0.998657703, 0, 0.997916639, 0)
+
+Titulo_2.Name = "Titulo"
+Titulo_2.Parent = Inicio_2
+Titulo_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Titulo_2.BackgroundTransparency = 1.000
+Titulo_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Titulo_2.BorderSizePixel = 0
+Titulo_2.Size = UDim2.new(1, 0, 0.104384132, 0)
+Titulo_2.Font = Enum.Font.SourceSans
+Titulo_2.Text = "Inicio"
+Titulo_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Titulo_2.TextScaled = true
+Titulo_2.TextSize = 14.000
+Titulo_2.TextWrapped = true
+
+Texto_3.Name = "Texto"
+Texto_3.Parent = Inicio_2
+Texto_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_3.BackgroundTransparency = 1.000
+Texto_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_3.BorderSizePixel = 0
+Texto_3.Position = UDim2.new(0, 0, 0.104384132, 0)
+Texto_3.Size = UDim2.new(1, 0, 0.290187955, 0)
+Texto_3.Font = Enum.Font.SourceSans
+Texto_3.Text = "ADVERTENCIA: Si usas este script no me hago responsable de que te puedan banear por usar haks, aunque es algo muy poco probable. Disfruta =]"
+Texto_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+Texto_3.TextScaled = true
+Texto_3.TextSize = 14.000
+Texto_3.TextWrapped = true
+
+Jugador_2.Name = "Jugador"
+Jugador_2.Parent = Contenido
+Jugador_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Jugador_2.BackgroundTransparency = 11.000
+Jugador_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Jugador_2.BorderSizePixel = 0
+Jugador_2.Position = UDim2.new(-0.00124151248, 0, 3.17891455e-08, 0)
+Jugador_2.Size = UDim2.new(0.998657703, 0, 0.997916639, 0)
+Jugador_2.Visible = false
+
+Titulo_3.Name = "Titulo"
+Titulo_3.Parent = Jugador_2
+Titulo_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Titulo_3.BackgroundTransparency = 1.000
+Titulo_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Titulo_3.BorderSizePixel = 0
+Titulo_3.Size = UDim2.new(1, 0, 0.104384132, 0)
+Titulo_3.Font = Enum.Font.SourceSans
+Titulo_3.Text = "Jugador local"
+Titulo_3.TextColor3 = Color3.fromRGB(255, 255, 255)
+Titulo_3.TextScaled = true
+Titulo_3.TextSize = 14.000
+Titulo_3.TextWrapped = true
+
+Funcion1_2.Name = "Funcion1"
+Funcion1_2.Parent = Jugador_2
+Funcion1_2.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion1_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion1_2.BorderSizePixel = 0
+Funcion1_2.Position = UDim2.new(0, 0, 0.129436329, 0)
+Funcion1_2.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Click_3.Name = "Click"
+Click_3.Parent = Funcion1_2
+Click_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click_3.BackgroundTransparency = 1.000
+Click_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click_3.BorderSizePixel = 0
+Click_3.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click_3.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click_3.Image = "rbxassetid://9468220156"
+
+UICorner_10.CornerRadius = UDim.new(1, 0)
+UICorner_10.Parent = Funcion1_2
+
+Texto_4.Name = "Texto"
+Texto_4.Parent = Funcion1_2
+Texto_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_4.BackgroundTransparency = 1.000
+Texto_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_4.BorderSizePixel = 0
+Texto_4.Size = UDim2.new(0.922043025, 0, 1.00369358, 0)
+Texto_4.Font = Enum.Font.SourceSans
+Texto_4.Text = "Fly"
+Texto_4.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto_4.TextScaled = true
+Texto_4.TextSize = 14.000
+Texto_4.TextWrapped = true
+
+Boton_3.Name = "Boton"
+Boton_3.Parent = Funcion1_2
+Boton_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton_3.BackgroundTransparency = 1.000
+Boton_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton_3.BorderSizePixel = 0
+Boton_3.Size = UDim2.new(1, 0, 1, 0)
+Boton_3.Font = Enum.Font.SourceSans
+Boton_3.Text = "Texto"
+Boton_3.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton_3.TextScaled = true
+Boton_3.TextSize = 14.000
+Boton_3.TextTransparency = 1.000
+Boton_3.TextWrapped = true
+
+Funcion2_2.Name = "Funcion2"
+Funcion2_2.Parent = Jugador_2
+Funcion2_2.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion2_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion2_2.BorderSizePixel = 0
+Funcion2_2.Position = UDim2.new(0, 0, 0.256784976, 0)
+Funcion2_2.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Click_4.Name = "Click"
+Click_4.Parent = Funcion2_2
+Click_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click_4.BackgroundTransparency = 1.000
+Click_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click_4.BorderSizePixel = 0
+Click_4.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click_4.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click_4.Image = "rbxassetid://9468220156"
+
+UICorner_11.CornerRadius = UDim.new(1, 0)
+UICorner_11.Parent = Funcion2_2
+
+Texto_5.Name = "Texto"
+Texto_5.Parent = Funcion2_2
+Texto_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_5.BackgroundTransparency = 1.000
+Texto_5.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_5.BorderSizePixel = 0
+Texto_5.Size = UDim2.new(0.922043025, 0, 1.00369358, 0)
+Texto_5.Font = Enum.Font.SourceSans
+Texto_5.Text = "Infinite Yield (IY)"
+Texto_5.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto_5.TextScaled = true
+Texto_5.TextSize = 14.000
+Texto_5.TextWrapped = true
+
+Boton_4.Name = "Boton"
+Boton_4.Parent = Funcion2_2
+Boton_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton_4.BackgroundTransparency = 1.000
+Boton_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton_4.BorderSizePixel = 0
+Boton_4.Size = UDim2.new(1, 0, 1, 0)
+Boton_4.Font = Enum.Font.SourceSans
+Boton_4.Text = "Texto"
+Boton_4.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton_4.TextScaled = true
+Boton_4.TextSize = 14.000
+Boton_4.TextTransparency = 1.000
+Boton_4.TextWrapped = true
+
+Funcion3.Name = "Funcion3"
+Funcion3.Parent = Jugador_2
+Funcion3.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion3.BorderSizePixel = 0
+Funcion3.Position = UDim2.new(0, 0, 0.39457199, 0)
+Funcion3.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Click_5.Name = "Click"
+Click_5.Parent = Funcion3
+Click_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click_5.BackgroundTransparency = 1.000
+Click_5.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click_5.BorderSizePixel = 0
+Click_5.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click_5.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click_5.Image = "rbxassetid://9468220156"
+
+UICorner_12.CornerRadius = UDim.new(1, 0)
+UICorner_12.Parent = Funcion3
+
+Texto_6.Name = "Texto"
+Texto_6.Parent = Funcion3
+Texto_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_6.BackgroundTransparency = 1.000
+Texto_6.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_6.BorderSizePixel = 0
+Texto_6.Position = UDim2.new(0, 0, 3.06302951e-07, 0)
+Texto_6.Size = UDim2.new(0.681451559, 0, 1.00369358, 0)
+Texto_6.Font = Enum.Font.SourceSans
+Texto_6.Text = "Velocidad"
+Texto_6.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto_6.TextScaled = true
+Texto_6.TextSize = 14.000
+Texto_6.TextWrapped = true
+
+Boton_5.Name = "Boton"
+Boton_5.Parent = Funcion3
+Boton_5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton_5.BackgroundTransparency = 1.000
+Boton_5.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton_5.BorderSizePixel = 0
+Boton_5.Size = UDim2.new(0.681451619, 0, 1, 0)
+Boton_5.Font = Enum.Font.SourceSans
+Boton_5.Text = "Texto"
+Boton_5.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton_5.TextScaled = true
+Boton_5.TextSize = 14.000
+Boton_5.TextTransparency = 1.000
+Boton_5.TextWrapped = true
+
+Velocidad.Name = "Velocidad"
+Velocidad.Parent = Funcion3
+Velocidad.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+Velocidad.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Velocidad.BorderSizePixel = 0
+Velocidad.Position = UDim2.new(0.685483873, 0, 0.0802957937, 0)
+Velocidad.Size = UDim2.new(0.236559138, 0, 0.843102574, 0)
+Velocidad.Font = Enum.Font.SourceSans
+Velocidad.PlaceholderText = "Ingrese velocidad (número)"
+Velocidad.Text = ""
+Velocidad.TextColor3 = Color3.fromRGB(0, 0, 0)
+Velocidad.TextSize = 14.000
+
+UICorner_13.CornerRadius = UDim.new(1, 0)
+UICorner_13.Parent = Velocidad
+
+Ajustes_2.Name = "Ajustes"
+Ajustes_2.Parent = Contenido
+Ajustes_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Ajustes_2.BackgroundTransparency = 11.000
+Ajustes_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Ajustes_2.BorderSizePixel = 0
+Ajuste
