@@ -563,4 +563,367 @@ Ajustes_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Ajustes_2.BackgroundTransparency = 11.000
 Ajustes_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Ajustes_2.BorderSizePixel = 0
-Ajuste
+Ajustes_2.Position = UDim2.new(-0.00124151248, 0, 3.17891455e-08, 0)
+Ajustes_2.Size = UDim2.new(0.998657703, 0, 0.997916639, 0)
+Ajustes_2.Visible = false
+
+Titulo_4.Name = "Titulo"
+Titulo_4.Parent = Ajustes_2
+Titulo_4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Titulo_4.BackgroundTransparency = 1.000
+Titulo_4.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Titulo_4.BorderSizePixel = 0
+Titulo_4.Size = UDim2.new(1, 0, 0.104384132, 0)
+Titulo_4.Font = Enum.Font.SourceSans
+Titulo_4.Text = "Ajustes"
+Titulo_4.TextColor3 = Color3.fromRGB(255, 255, 255)
+Titulo_4.TextScaled = true
+Titulo_4.TextSize = 14.000
+Titulo_4.TextWrapped = true
+
+Funcion1_3.Name = "Funcion1"
+Funcion1_3.Parent = Ajustes_2
+Funcion1_3.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion1_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion1_3.BorderSizePixel = 0
+Funcion1_3.Position = UDim2.new(0, 0, 0.129436329, 0)
+Funcion1_3.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Click_6.Name = "Click"
+Click_6.Parent = Funcion1_3
+Click_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click_6.BackgroundTransparency = 1.000
+Click_6.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click_6.BorderSizePixel = 0
+Click_6.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click_6.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click_6.Image = "rbxassetid://9468220156"
+
+UICorner_14.CornerRadius = UDim.new(1, 0)
+UICorner_14.Parent = Funcion1_3
+
+Texto_7.Name = "Texto"
+Texto_7.Parent = Funcion1_3
+Texto_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_7.BackgroundTransparency = 1.000
+Texto_7.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_7.BorderSizePixel = 0
+Texto_7.Size = UDim2.new(0.922043025, 0, 1.00369358, 0)
+Texto_7.Font = Enum.Font.SourceSans
+Texto_7.Text = "Eliminar script"
+Texto_7.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto_7.TextScaled = true
+Texto_7.TextSize = 14.000
+Texto_7.TextWrapped = true
+
+Boton_6.Name = "Boton"
+Boton_6.Parent = Funcion1_3
+Boton_6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton_6.BackgroundTransparency = 1.000
+Boton_6.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton_6.BorderSizePixel = 0
+Boton_6.Size = UDim2.new(1, 0, 1, 0)
+Boton_6.Font = Enum.Font.SourceSans
+Boton_6.Text = "Texto"
+Boton_6.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton_6.TextScaled = true
+Boton_6.TextSize = 14.000
+Boton_6.TextTransparency = 1.000
+Boton_6.TextWrapped = true
+
+Funcion2_3.Name = "Funcion2"
+Funcion2_3.Parent = Ajustes_2
+Funcion2_3.BackgroundColor3 = Color3.fromRGB(170, 255, 127)
+Funcion2_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Funcion2_3.BorderSizePixel = 0
+Funcion2_3.Position = UDim2.new(0, 0, 0.256784976, 0)
+Funcion2_3.Size = UDim2.new(1, 0, 0.104000002, 0)
+
+Click_7.Name = "Click"
+Click_7.Parent = Funcion2_3
+Click_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Click_7.BackgroundTransparency = 1.000
+Click_7.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Click_7.BorderSizePixel = 0
+Click_7.Position = UDim2.new(0.922043025, 0, 0, 0)
+Click_7.Size = UDim2.new(0.067204304, 0, 1, 0)
+Click_7.Image = "rbxassetid://9468220156"
+
+UICorner_15.CornerRadius = UDim.new(1, 0)
+UICorner_15.Parent = Funcion2_3
+
+Texto_8.Name = "Texto"
+Texto_8.Parent = Funcion2_3
+Texto_8.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Texto_8.BackgroundTransparency = 1.000
+Texto_8.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Texto_8.BorderSizePixel = 0
+Texto_8.Size = UDim2.new(0.922043025, 0, 1.00369358, 0)
+Texto_8.Font = Enum.Font.SourceSans
+Texto_8.Text = "Mostrar imagen de fondo"
+Texto_8.TextColor3 = Color3.fromRGB(0, 0, 0)
+Texto_8.TextScaled = true
+Texto_8.TextSize = 14.000
+Texto_8.TextWrapped = true
+
+Boton_7.Name = "Boton"
+Boton_7.Parent = Funcion2_3
+Boton_7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Boton_7.BackgroundTransparency = 1.000
+Boton_7.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Boton_7.BorderSizePixel = 0
+Boton_7.Size = UDim2.new(1, 0, 1, 0)
+Boton_7.Font = Enum.Font.SourceSans
+Boton_7.Text = "Texto"
+Boton_7.TextColor3 = Color3.fromRGB(0, 0, 0)
+Boton_7.TextScaled = true
+Boton_7.TextSize = 14.000
+Boton_7.TextTransparency = 1.000
+Boton_7.TextWrapped = true
+
+EjecutadoCorrectamente.Name = "EjecutadoCorrectamente"
+EjecutadoCorrectamente.Parent = Contenido
+EjecutadoCorrectamente.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
+EjecutadoCorrectamente.BackgroundTransparency = 0.900
+EjecutadoCorrectamente.BorderColor3 = Color3.fromRGB(0, 0, 0)
+EjecutadoCorrectamente.BorderSizePixel = 0
+EjecutadoCorrectamente.Position = UDim2.new(0.947651029, 0, 0, 0)
+EjecutadoCorrectamente.Size = UDim2.new(0.0671140924, 0, 0.104166731, 0)
+
+UICorner_16.CornerRadius = UDim.new(1, 0)
+UICorner_16.Parent = EjecutadoCorrectamente
+
+-- Scripts:
+
+local function XZZW_fake_script() -- BotonPrincipal.LocalScript 
+	local script = Instance.new('LocalScript', BotonPrincipal)
+
+	local button = script.Parent
+	local frame = script.Parent.Parent:WaitForChild("Panel")
+	
+	button.MouseButton1Click:Connect(function()
+		frame.Visible = not frame.Visible
+	end)
+	
+end
+coroutine.wrap(XZZW_fake_script)()
+local function ASSIDRO_fake_script() -- BotonPrincipal.LocalScript 
+	local script = Instance.new('LocalScript', BotonPrincipal)
+
+	local imageButton = script.Parent
+	local gameId = 6741970382
+	
+	-- Construye la URL de la miniatura del juego
+	local thumbUrl = "https://www.roblox.com/asset-thumbnail/image?assetId="..gameId.."&width=420&height=420&format=png"
+	
+	-- Asigna la imagen al ImageButton
+	imageButton.Image = thumbUrl
+	
+end
+coroutine.wrap(ASSIDRO_fake_script)()
+local function DZATIYV_fake_script() -- Inicio.LocalScript 
+	local script = Instance.new('LocalScript', Inicio)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Contenido.Ajustes.Visible = false
+		script.Parent.Parent.Parent.Contenido.Inicio.Visible = true
+		script.Parent.Parent.Parent.Contenido.Jugador.Visible = false
+		script.Parent.Parent.Parent.Contenido.Funciones.Visible = false
+	end)
+end
+coroutine.wrap(DZATIYV_fake_script)()
+local function PIVKVCS_fake_script() -- Jugador.LocalScript 
+	local script = Instance.new('LocalScript', Jugador)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Contenido.Ajustes.Visible = false
+		script.Parent.Parent.Parent.Contenido.Inicio.Visible = false
+		script.Parent.Parent.Parent.Contenido.Jugador.Visible = true
+		script.Parent.Parent.Parent.Contenido.Funciones.Visible = false
+	end)
+end
+coroutine.wrap(PIVKVCS_fake_script)()
+local function WZCS_fake_script() -- Funciones.LocalScript 
+	local script = Instance.new('LocalScript', Funciones)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Contenido.Ajustes.Visible = false
+		script.Parent.Parent.Parent.Contenido.Inicio.Visible = false
+		script.Parent.Parent.Parent.Contenido.Jugador.Visible = false
+		script.Parent.Parent.Parent.Contenido.Funciones.Visible = true
+	end)
+end
+coroutine.wrap(WZCS_fake_script)()
+local function ROMB_fake_script() -- Ajustes.LocalScript 
+	local script = Instance.new('LocalScript', Ajustes)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Contenido.Ajustes.Visible = true
+		script.Parent.Parent.Parent.Contenido.Inicio.Visible = false
+		script.Parent.Parent.Parent.Contenido.Jugador.Visible = false
+		script.Parent.Parent.Parent.Contenido.Funciones.Visible = false
+	end)
+end
+coroutine.wrap(ROMB_fake_script)()
+local function IBGPQY_fake_script() -- Boton.LocalScript 
+	local script = Instance.new('LocalScript', Boton)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		workspace.ZombieBlockers.Blocker.BrickColor = BrickColor.new("Mint")
+		game.ReplicatedStorage.LocalFolder.AntiWeaponZone:Destroy()
+		workspace.AntiWeaponZone:Destroy()
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+		wait(0.1)
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+		while true do
+			workspace.ZombieBlockers.Blocker.CanCollide = false
+			wait(0.1)
+		end
+	end)
+end
+coroutine.wrap(IBGPQY_fake_script)()
+local function MQENXKL_fake_script() -- Boton_2.Pistola 
+	local script = Instance.new('LocalScript', Boton_2)
+
+	script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+	wait(0.1)
+	script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+	
+	local Players = game:GetService("Players")
+	local LocalPlayer = Players.LocalPlayer
+	
+	repeat wait() until LocalPlayer.Backpack:FindFirstChild("Pistol") or LocalPlayer.Character:FindFirstChild("Pistol")
+	
+	local function buffGun()
+		local Pistol = LocalPlayer.Backpack:FindFirstChild("Pistol") or LocalPlayer.Character:FindFirstChild("Pistol")
+		if not Pistol then return end
+	
+		for _, v in ipairs(Pistol:GetDescendants()) do
+			if v:IsA("ModuleScript") then
+				local success, config = pcall(require, v)
+				if success and typeof(config) == "table" and config["BaseDamage"] then
+					config["BaseDamage"] = 5000
+					config["HeadshotDamageMultiplier"] = 5
+					config["AmmoPerClip"] = 9999
+					config["Clips"] = math.huge
+					config["MaxClip"] = math.huge
+					config["LimitedClipEnabled"] = false
+	
+					config["FireRate"] = 0.10
+					config["Spread"] = 0
+					config["Knockback"] = 220
+					config["Lifesteal"] = 1
+				end
+			end
+		end
+	end
+	
+	buffGun()
+end
+coroutine.wrap(MQENXKL_fake_script)()
+local function BUEFS_fake_script() -- Boton_2.Revolver 
+	local script = Instance.new('LocalScript', Boton_2)
+
+	
+	script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+	wait(0.1)
+	script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+	
+	
+	local Players = game:GetService("Players")
+	local LocalPlayer = Players.LocalPlayer
+	
+	repeat wait() until LocalPlayer.Backpack:FindFirstChild("Revolver") or LocalPlayer.Character:FindFirstChild("Revolver")
+	
+	local function buffGun()
+		local Pistol = LocalPlayer.Backpack:FindFirstChild("Revolver") or LocalPlayer.Character:FindFirstChild("Revolver")
+		if not Pistol then return end
+	
+		for _, v in ipairs(Pistol:GetDescendants()) do
+			if v:IsA("ModuleScript") then
+				local success, config = pcall(require, v)
+				if success and typeof(config) == "table" and config["BaseDamage"] then
+					config["BaseDamage"] = 5000
+					config["HeadshotDamageMultiplier"] = 5
+					config["AmmoPerClip"] = 9999
+					config["Clips"] = math.huge
+					config["MaxClip"] = math.huge
+					config["LimitedClipEnabled"] = false
+	
+					config["FireRate"] = 0.10
+					config["Spread"] = 0
+					config["Knockback"] = 220
+					config["Lifesteal"] = 1
+				end
+			end
+		end
+	end
+	
+	buffGun()
+end
+coroutine.wrap(BUEFS_fake_script)()
+local function XIZFXB_fake_script() -- Boton_3.LocalScript 
+	local script = Instance.new('LocalScript', Boton_3)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+		wait(0.1)
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+		
+		loadstring("\108\111\97\100\115\116\114\105\110\103\40\103\97\109\101\58\72\116\116\112\71\101\116\40\40\39\104\116\116\112\115\58\47\47\103\105\115\116\46\103\105\116\104\117\98\117\115\101\114\99\111\110\116\101\110\116\46\99\111\109\47\109\101\111\122\111\110\101\89\84\47\98\102\48\51\55\100\102\102\57\102\48\97\55\48\48\49\55\51\48\52\100\100\100\54\55\102\100\99\100\51\55\48\47\114\97\119\47\101\49\52\101\55\52\102\52\50\53\98\48\54\48\100\102\53\50\51\51\52\51\99\102\51\48\98\55\56\55\48\55\52\101\98\51\99\53\100\50\47\97\114\99\101\117\115\37\50\53\50\48\120\37\50\53\50\48\102\108\121\37\50\53\50\48\50\37\50\53\50\48\111\98\102\108\117\99\97\116\111\114\39\41\44\116\114\117\101\41\41\40\41\10\10")()
+	end)
+end
+coroutine.wrap(XIZFXB_fake_script)()
+local function HMPXTYW_fake_script() -- Boton_4.LocalScript 
+	local script = Instance.new('LocalScript', Boton_4)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+		wait(0.1)
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+		
+		loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-IY-27798"))()
+	end)
+end
+coroutine.wrap(HMPXTYW_fake_script)()
+local function UBJVT_fake_script() -- Boton_5.LocalScript 
+	local script = Instance.new('LocalScript', Boton_5)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+		wait(0.1)
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+		
+		while true do
+			workspace:WaitForChild(game.Players.LocalPlayer.Name):WaitForChild("Humanoid").WalkSpeed= script.Parent.Parent.Velocidad.Text
+			wait(0.01)
+		end
+	end)
+end
+coroutine.wrap(UBJVT_fake_script)()
+local function IHLHMZA_fake_script() -- Boton_6.LocalScript 
+	local script = Instance.new('LocalScript', Boton_6)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Parent.Parent.Parent:Destroy()
+	end)
+end
+coroutine.wrap(IHLHMZA_fake_script)()
+local function SNWKQQY_fake_script() -- Boton_7.LocalScript 
+	local script = Instance.new('LocalScript', Boton_7)
+
+	local frame = script.Parent.Parent.Parent.Parent.Parent.Parent:WaitForChild("Panel")
+	
+	script.Parent.MouseButton1Click:Connect(function()
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.4
+		wait(0.1)
+		script.Parent.Parent.Parent.Parent.EjecutadoCorrectamente.BackgroundTransparency = 0.9
+	
+		if frame.ImageTransparency == 1 then
+			frame.ImageTransparency = 0.9
+		else
+			frame.ImageTransparency = 1
+		end
+	end)
+end
+coroutine.wrap(SNWKQQY_fake_script)()
