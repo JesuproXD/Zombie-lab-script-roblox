@@ -1,0 +1,3701 @@
+local JugadorLocal = game.Players.LocalPlayer
+local PlayerGui = JugadorLocal:FindFirstChild("PlayerGui")
+local JugadorFisico = workspace:WaitForChild(JugadorLocal.Name)
+local JugadorHumanoid = JugadorFisico:WaitForChild("Humanoid")
+
+local TeleportService = game:GetService("TeleportService")
+
+local Camera = Workspace.CurrentCamera
+
+
+local RunService = game:GetService("RunService")
+
+local HabitacionAnterior = nil
+
+local coreGui = game:GetService("CoreGui")
+
+local CarpetaPrincipal = workspace:FindFirstChild("CarpetaPrincipal") or Instance.new("Folder")
+CarpetaPrincipal.Name = "CarpetaPrincipal"
+CarpetaPrincipal.Parent = workspace
+
+local CarpetaValores = CarpetaPrincipal:FindFirstChild("CarpetaValores") or Instance.new("Folder")
+CarpetaValores.Name = "CarpetaValores"
+CarpetaValores.Parent = CarpetaPrincipal
+
+local HabitacionActual = CarpetaValores:FindFirstChild("HabitacionActual") or Instance.new("NumberValue")
+HabitacionActual.Name = "HabitacionActual"
+HabitacionActual.Parent = CarpetaValores
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemotesFolder = ReplicatedStorage:WaitForChild("RemotesFolder")
+
+local function LimpiarESP()
+	for _, obj in pairs(workspace:GetDescendants()) do
+		local h = obj:FindFirstChild("DoorHighlight")
+		if h then
+			h:Destroy()
+		end
+	end
+end
+
+local function EnQueHabitacionEstoy()
+	local mayor = 0
+
+	for _, modelo in ipairs(workspace:WaitForChild("CurrentRooms"):GetChildren()) do
+		local numero = tonumber(modelo.Name)
+
+		if numero and numero > mayor then
+			mayor = numero -1
+		end
+	end
+
+	if HabitacionActual.Value ~= mayor then
+		HabitacionActual.Value = mayor
+	end
+end
+
+EnQueHabitacionEstoy()
+
+workspace:WaitForChild("CurrentRooms").ChildAdded:Connect(EnQueHabitacionEstoy)
+
+-- ==========================================
+-- 🏷️ TUS NOMBRES PERSONALIZADOS (Edita aquí)
+-- ==========================================
+local nombresPersonalizados = {
+    ["Rush"] = "Rush ",
+    ["Ambush"] = "Ambush ",
+    ["Figure"] = "Figure ",
+    ["Eyes"] = "Eyes ",
+    ["Sally"] = "Sally ",
+
+}
+
+local modules = JugadorLocal:WaitForChild("PlayerGui")
+	:WaitForChild("MainUI")
+	:WaitForChild("Initiator")
+	:WaitForChild("Main_Game")
+	:WaitForChild("RemoteListener")
+	:WaitForChild("Modules")
+
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Lighting = game:GetService("Lighting")
+
+local Stats = game:GetService("Stats")
+
+local SonidoNotificacion = Instance.new("Sound")
+
+SonidoNotificacion.SoundId = "rbxassetid://4590662766"
+SonidoNotificacion.Parent = game.SoundService
+
+local Repo = "https://pastebin.com/raw/"
+local Library = loadstring(game:HttpGet(Repo.."qR4uC8iC"))()
+local ThemeManager = loadstring(game:HttpGet(Repo.."9T9nsW0r"))()
+local SaveManager = loadstring(game:HttpGet(Repo.."tip8aY8D"))()
+
+Library:Notify("Cargando script...")
+SonidoNotificacion:Play()
+
+local Options = Library.Options
+local Toggles = Library.Toggles
+
+Library.ForceCheckbox = false -- Forces AddToggle to AddCheckbox
+Library.ShowToggleFrameInKeybinds = true -- Make toggle keybinds work inside the keybinds UI (aka adds a toggle to the UI). Good for mobile users (Default value = true)
+
+
+local Window = Library:CreateWindow({
+	-- Set Center to true if you want the menu to appear in the center
+	-- Set AutoShow to true if you want the menu to appear when it is created
+	-- Set Resizable to true if you want to have in-game resizable Window
+	-- Set MobileButtonsSide to "Left" or "Right" if you want the ui toggle & lock buttons to be on the left or right side of the window
+	-- Set ShowCustomCursor to false if you don't want to use the Linoria cursor
+	-- NotifySide = Changes the side of the notifications (Left, Right) (Default value = Left)
+	-- Position and Size are also valid options here
+	-- but you do not need to define them unless you are changing them :)
+
+	Title = "Doors ~ El Hotel",
+	Footer = "Versión: 0.1",
+	Icon = 0,
+	NotifySide = "Right",
+	ShowCustomCursor = false,
+})
+
+getgenv().Tabs = {
+    InicioTab = Window:AddTab("Inicio", "house"),
+    JugadorLocalTab = Window:AddTab("Jugador Local", "user"),
+    FuncionesTab = Window:AddTab("Funciones", "wrench"),
+    VisualesTab = Window:AddTab("Visuales", "eye"),
+    ScriptsTab = Window:AddTab("Scripts", "layout-dashboard"),
+    AjustesTab = Window:AddTab("Ajustes", "settings"),
+}
+
+getgenv().Library = Library
+
+-- Cargar pestaña de Inicio pasando referencias
+loadstring(game:HttpGet(Repo.."P3b94Sz7"))()
+
+-- 1. Creas la variable global con el contenido que tú quieras
+getgenv().NombreTexto = "Doors ~ El Hotel"
+
+-- 2. Ejecutas el Pastebin normalmente
+loadstring(game:HttpGet("https://pastebin.com/raw/Aqt2ftkx"))()
+
+getgenv().SonidoNotificacion = SonidoNotificacion
+
+local TabBox = Tabs.JugadorLocalTab:AddLeftTabbox()
+local Tab1 = TabBox:AddTab("Personaje", "user")
+
+-- Guardamos referencias
+local Toggle = Tab1:AddToggle("Velocidad", {
+	Text = "Velocidad",
+	Tooltip = "Modifica la velocidad del juagdor",
+})
+
+local Slider = Tab1:AddSlider("Velocidad2", {
+	Text = "Ajústalo como quieras",
+	Default = JugadorHumanoid.WalkSpeed,
+	Min = JugadorHumanoid.WalkSpeed,
+	Max = 20,
+	Rounding = 0,
+
+	Callback = function(Value)
+		JugadorHumanoid.WalkSpeed = Value
+	end,
+
+	Disabled = true -- empieza desactivado
+})
+
+-- Conectamos el toggle
+Toggle:OnChanged(function(Value)
+	if Value then
+		Slider:SetDisabled(false) -- activar slider
+	else
+		Slider:SetDisabled(true) -- desactivar slider
+	end
+end)
+
+Tab1:AddDivider()
+
+-- =============================================================================
+-- 🏃‍♂️ SISTEMA DE IMPULSOS (TOGGLE + DROPDOWN POR ATRIBUTOS)
+-- =============================================================================
+
+local ToggleImpulsos = Tab1:AddToggle("ActivarImpulsosToggle", {
+    Text = "Impulsos",
+    Tooltip = "Añade diferentes impulsos al jugador",
+    Default = false,
+})
+
+local DropdownImpulsos = Tab1:AddDropdown("ImpulsosDropdown", {
+    Values = {"Ninguno", "Impulso Delantero", "Impulso Trasero"},
+    Default = 1, -- "Ninguno"
+    Multi = false,
+    Text = "Ajústalo como quieras",
+    Tooltip = "Elige el tipo de impulso",
+    
+    Callback = function(Value)
+        local personaje = game.Players.LocalPlayer.Character
+        if not personaje then return end
+
+        -- 🛡️ Si el Toggle principal está apagado, no dejamos que cambie nada (fuerza a 0)
+        if Toggles.ActivarImpulsosToggle and not Toggles.ActivarImpulsosToggle.Value then 
+            personaje:SetAttribute("SpeedBoost", 0)
+            personaje:SetAttribute("SpeedBoostBehind", 0)
+            return 
+        end
+
+        -- Si está encendido, aplicamos el atributo según la opción del dropdown
+        if Value == "Ninguno" then
+            personaje:SetAttribute("SpeedBoost", 0)
+            personaje:SetAttribute("SpeedBoostBehind", 0)
+            
+        elseif Value == "Impulso Delantero" then
+            personaje:SetAttribute("SpeedBoost", 5)
+            personaje:SetAttribute("SpeedBoostBehind", 0)
+            
+        elseif Value == "Impulso Trasero" then
+            personaje:SetAttribute("SpeedBoost", 0)
+            personaje:SetAttribute("SpeedBoostBehind", 5)
+        end
+    end,
+    
+    Disabled = true -- 🔒 Empieza completamente desactivado y gris por defecto
+})
+
+-- 🔄 Conexión en vivo: El Toggle decide el destino del Dropdown y de los atributos
+ToggleImpulsos:OnChanged(function(Value)
+    local personaje = game.Players.LocalPlayer.Character
+    
+    if Options and Options.ImpulsosDropdown then
+        if Value then
+            -- 🔓 Si enciendes el toggle, desbloqueamos el dropdown
+            Options.ImpulsosDropdown:SetDisabled(false)
+            -- Forzamos a que se aplique la opción que esté marcada actualmente en el menú
+            Options.ImpulsosDropdown:OnChanged()
+        else
+            -- 🔒 Si apagas el toggle, bloqueamos el dropdown (se pone gris)
+            Options.ImpulsosDropdown:SetDisabled(true)
+            -- Ponemos los atributos del personaje a 0 inmediatamente
+            if personaje then
+                personaje:SetAttribute("SpeedBoost", 0)
+                personaje:SetAttribute("SpeedBoostBehind", 0)
+            end
+        end
+    end
+end)
+
+Tab1:AddDivider()
+
+local jumpConnection = nil
+
+-- Función auxiliar para aplicar el atributo de forma segura al personaje
+local function setJumpAttribute(char, enabled)
+    if char and char:GetAttribute("CanJump") ~= enabled then
+        char:SetAttribute("CanJump", enabled)
+    end
+end
+
+-- Agregar el Toggle directamente en la pestaña
+Tab1:AddToggle("PoderSaltar", {
+    Text = "Activar Salto",
+    Default = false,
+    Tooltip = "Permite saltar incluso si el juego desactiva la mecánica de salto",
+    Risky = false,
+
+    Callback = function(Value)
+        -- 1. Limpiamos conexiones previas por seguridad
+        if jumpConnection then
+            jumpConnection:Disconnect()
+            jumpConnection = nil
+        end
+
+        local currentChar = LocalPlayer.Character
+
+        if Value then
+            -- Aplicamos el atributo inmediatamente
+            setJumpAttribute(currentChar, true)
+
+            -- Forzamos que 'CanJump' se mantenga en 'true' en cada frame (Heartbeat)
+            jumpConnection = RunService.Heartbeat:Connect(function()
+                setJumpAttribute(LocalPlayer.Character, true)
+            end)
+        else
+            -- Si se apaga, aseguramos de restaurar el estado a 'false' y detener el loop
+            setJumpAttribute(currentChar, false)
+        end
+    end,
+})
+
+-- Reaplicar el comportamiento automáticamente cuando el jugador reaparece (Respawn)
+LocalPlayer.CharacterAdded:Connect(function(newChar)
+    task.wait(0.1)
+    if Toggles and Toggles.EnableJump then
+        setJumpAttribute(newChar, Toggles.EnableJump.Value)
+    end
+end)
+
+Tab1:AddDivider()
+
+Tab1:AddButton("AntiAFK",{
+	Text = "Anti AFK",
+	Tooltip = "Evita que el jugador sea expulsado del juego por inactividad",
+	
+	Func = function()
+		loadstring(game:HttpGet(Repo.."6KAradpr"))()
+		Library:Notify("Anti AFK activado")
+	end,
+})
+
+-- =============================================================================
+-- 👁️ SISTEMA DE FOV (TOGGLE CONTROLADOR + SLIDER BLOQUEADO POR DEFECTO)
+-- =============================================================================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+-- Variables originales del script
+local defaultFOV = camera.FieldOfView
+local customFOV = defaultFOV
+local isFOVEnabled = false
+
+Tab1:AddToggle("ActivarFOV", {
+	Text = "FOV",
+	Tooltip = "Customiza el campo de visión",
+	Default = false,
+	Callback = function(Value)
+		isFOVEnabled = Value
+		
+		-- Habilitar / Deshabilitar el Slider dinámicamente
+		if Options and Options.ValorFOV then
+			Options.ValorFOV:SetDisabled(not Value)
+		end
+
+		-- Aplicar o restaurar FOV
+		if isFOVEnabled then
+			camera.FieldOfView = customFOV
+		else
+			camera.FieldOfView = defaultFOV
+		end
+	end
+})
+
+-- 1. SLIDER (Creación inicial con Disabled = true)
+local SliderFOV = Tab1:AddSlider("ValorFOV", {
+	Text = "Ajústalo como quieras",
+	Default = math.floor(defaultFOV),
+	Min = 1,
+	Max = 120,
+	Rounding = 0,
+	Callback = function(Value)
+		customFOV = Value
+		if isFOVEnabled then
+			camera.FieldOfView = customFOV
+		end
+	end,
+	Disabled = true -- 🔒 Inicia desactivado/bloqueado
+})
+
+-- 3. DETECCIÓN DE REESPAWN
+player.CharacterAdded:Connect(function(char)
+	char:WaitForChild("Humanoid")
+	task.wait(1)
+	if isFOVEnabled then
+		camera.FieldOfView = customFOV
+	end
+end)
+
+-- 4. MÉTODO ANTI-SOBREESCRITURA (Escucha directa a la cámara)
+camera:GetPropertyChangedSignal("FieldOfView"):Connect(function()
+	if isFOVEnabled and camera.FieldOfView ~= customFOV then
+		camera.FieldOfView = customFOV
+	end
+end)
+
+-- 5. BUCLE FORZADO EN RENDERSTEPPED (Refuerzo constante)
+RunService.RenderStepped:Connect(function()
+	if isFOVEnabled then
+		if workspace.CurrentCamera ~= camera then
+			camera = workspace.CurrentCamera
+		end
+		if camera.FieldOfView ~= customFOV then
+			camera.FieldOfView = customFOV
+		end
+	end
+end)
+
+-- =================================================================
+-- 🎥 MÓDULO CÁMARA EN TERCERA PERSONA (TAB1 - SIN KEYPICKER)
+-- =================================================================
+
+-- Variables de estado
+local thirdPersonActivo = false
+local offsetX = 0
+local offsetY = 4
+local offsetZ = 20
+
+local ThirdPersonParts = {}
+local ThirdPersonConnection = nil
+
+-- Variables locales para almacenar las instancias de los Sliders
+local sliderX, sliderY, sliderZ
+
+-- Función para recopilar las partes del personaje que deben ser visibles
+local function actualizarPartesPersonaje(character)
+    ThirdPersonParts = {}
+    if not character then return end
+
+    for _, object in ipairs(character:GetDescendants()) do
+        if object:IsA("BasePart") then
+            if object.Name == "Head" or object.Parent:IsA("Accessory") then
+                table.insert(ThirdPersonParts, object)
+            end
+        elseif object:IsA("Decal") and object.Name == "face" then
+            table.insert(ThirdPersonParts, object)
+        end
+    end
+end
+
+-- Inicialización y detección de Respawn
+if LocalPlayer.Character then
+    actualizarPartesPersonaje(LocalPlayer.Character)
+end
+
+LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+    task.wait(0.2)
+    actualizarPartesPersonaje(newCharacter)
+end)
+
+-- Función principal para controlar la cámara
+local function actualizarCamara()
+    if thirdPersonActivo then
+        Camera.CameraType = Enum.CameraType.Scriptable
+
+        if not ThirdPersonConnection then
+            ThirdPersonConnection = RunService.RenderStepped:Connect(function()
+                local character = LocalPlayer.Character
+                if not character then return end
+
+                local hrp = character:FindFirstChild("HumanoidRootPart")
+                if not hrp then return end
+
+                local offsetVector = Vector3.new(offsetX, offsetY, offsetZ)
+
+                local camPos = hrp.CFrame:ToWorldSpace(CFrame.new(offsetVector))
+                local targetCFrame = CFrame.new(camPos.Position, hrp.Position)
+
+                Camera.CFrame = Camera.CFrame:Lerp(targetCFrame, 0.2)
+
+                -- Forzar visibilidad de la cabeza y accesorios
+                for _, part in ipairs(ThirdPersonParts) do
+                    if part and part.Parent then
+                        if part:IsA("BasePart") then
+                            part.LocalTransparencyModifier = 0
+                        elseif part:IsA("Decal") then
+                            part.Transparency = 0
+                        end
+                    end
+                end
+            end)
+        end
+    else
+        -- Desactivar y restaurar la cámara normal
+        if ThirdPersonConnection then
+            ThirdPersonConnection:Disconnect()
+            ThirdPersonConnection = nil
+        end
+
+        Camera.CameraType = Enum.CameraType.Custom
+
+        for _, part in ipairs(ThirdPersonParts) do
+            if part and part.Parent then
+                if part:IsA("BasePart") then
+                    part.LocalTransparencyModifier = 0
+                end
+            end
+        end
+    end
+end
+
+-- =================================================================
+-- 🎛️ CONTROLES EN LINORIALIB (TAB1)
+-- =================================================================
+
+-- 1. TOGGLE PRINCIPAL (PRIMERO EN LA LISTA)
+Tab1:AddToggle("ThirdPersonToggle", {
+    Text = "Tercera Persona",
+    Default = false,
+    Tooltip = "Aleja la cámara para ver a tu personaje desde atrás.",
+    Callback = function(Value)
+        thirdPersonActivo = Value
+
+        -- Cambiamos el estado Disabled de los sliders de forma segura si ya fueron creados
+        if sliderX then sliderX:SetDisabled(not Value) end
+        if sliderY then sliderY:SetDisabled(not Value) end
+        if sliderZ then sliderZ:SetDisabled(not Value) end
+
+        actualizarCamara()
+    end
+})
+
+-- 2. SLIDERS (SE MUESTRAN DEBAJO DEL TOGGLE)
+sliderX = Tab1:AddSlider("ThirdPersonOffsetX", {
+    Text = "Eje X",
+    Min = 0,
+    Max = 50,
+    Default = 0,
+    Rounding = 0,
+    Compact = true,
+    Disabled = true, -- Comienza desactivado
+    Callback = function(Value)
+        offsetX = Value
+    end
+})
+
+sliderY = Tab1:AddSlider("ThirdPersonOffsetY", {
+    Text = "Eje Y",
+    Min = 0,
+    Max = 50,
+    Default = 4,
+    Rounding = 0,
+    Compact = true,
+    Disabled = true, -- Comienza desactivado
+    Callback = function(Value)
+        offsetY = Value
+    end
+})
+
+sliderZ = Tab1:AddSlider("ThirdPersonOffsetZ", {
+    Text = "Eje Z",
+    Min = 0,
+    Max = 50,
+    Default = 20,
+    Rounding = 0,
+    Compact = true,
+    Disabled = true, -- Comienza desactivado
+    Callback = function(Value)
+        offsetZ = Value
+    end
+})
+
+local TabBox3 = Tabs.JugadorLocalTab:AddRightGroupbox("Gestión Del Juego", "settings-2")
+
+
+local Toggle7 = TabBox3:AddButton("ReiniciarPersonaje",{
+	Text = "ReiniciarPersonaje",
+	Tooltip = "Reinicia al persoanje",
+	
+	Func = function()
+        JugadorHumanoid.Health = 0
+        JugadorLocal.PlayerGui.MainUI.Statistics.Death.Text = "Reinicio de personaje"
+	end,
+})
+
+TabBox3:AddButton("Revivir",{
+	Text = "Revivir (Cuesta vidas reales)",
+	Tooltip = "Permite revivir al jugador en cualquier momento",
+	
+	Func = function()
+		Game:GetService("ReplicatedStorage").RemotesFolder.Revive:FireServer()
+	end,
+})
+
+TabBox3:AddButton("SalirDelJuego",{
+	Text = "Salir del juego (Kick)",
+	Tooltip = "Permite expulsar al jugador del juego directamente",
+	
+	Func = function()
+		JugadorLocal:Kick("Fuiste expulsado del juego correctamente")
+	end,
+})
+
+
+TabBox3:AddButton("VolverAlLobby",{
+	Text = "Volver al lobby",
+	Tooltip = "Permite teletransportar al jugador al lobby del juego",
+	
+	Func = function()
+		TeleportService:Teleport(6516141723, JugadorLocal)
+	end,
+})
+
+local TabBox2 = Tabs.JugadorLocalTab:AddRightGroupbox("Prompts")
+
+-- =================================================================
+-- 🌟 SISTEMA DE INTERACCIÓN Y LISTA DE IGNORANCIA AVANZADO
+-- =================================================================
+
+local ProximityPromptService = game:GetService("ProximityPromptService")
+
+-- Estado global
+local autoInteractActivo = false
+local ignoradosSeleccionados = {}
+
+-- Nombres de los padres de segundo nivel (abuelos) a excluir si el prompt es "ModulePrompt"
+local itemsExcluidos = {
+    ["PurchasableItem1"] = true,
+    ["PurchasableItem2"] = true,
+    ["PurchasableItem3"] = true,
+    ["PurchasableItem4"] = true
+}
+
+-- Función auxiliar para verificar si un texto contiene algún término ignorado
+local function esTextoIgnorado(texto)
+    if not texto or texto == "" then return false end
+    local textoLower = string.lower(texto)
+    
+    for nombreIgnorado, activo in pairs(ignoradosSeleccionados) do
+        if activo and string.find(textoLower, string.lower(nombreIgnorado), 1, true) then
+            return true
+        end
+    end
+    return false
+end
+
+-- Función principal de activación
+local function triggerPrompt(prompt)
+    if not prompt or not prompt.Enabled or not prompt.Parent then return end
+
+    local promptName = prompt.Name
+    local parentName = prompt.Parent.Name
+
+    -- 1. Regla específica: Excluir ModulePrompt si su abuelo es PurchasableItem1..4
+    if promptName == "ModulePrompt" and prompt.Parent.Parent then
+        local grandParentName = prompt.Parent.Parent.Name
+        if itemsExcluidos[grandParentName] then
+            return -- Se ignora la interacción
+        end
+    end
+
+    -- 2. Verificación directa por Nombre del Prompt o de su Padre (Modelo/Parte)
+    if ignoradosSeleccionados[promptName] or ignoradosSeleccionados[parentName] then
+        return
+    end
+
+    -- 3. Verificación inteligente por Texto Visual (ObjectText / ActionText)
+    if esTextoIgnorado(prompt.ObjectText) or esTextoIgnorado(prompt.ActionText) then
+        return
+    end
+
+    -- Ejecución de la interacción
+    if typeof(fireproximityprompt) == "function" then
+        fireproximityprompt(prompt)
+    else
+        prompt:InputHoldBegin()
+        if prompt.HoldDuration > 0 then
+            task.wait(prompt.HoldDuration)
+        end
+        prompt:InputHoldEnd()
+    end
+end
+
+-- Escuchar eventos de apariciones de prompts
+ProximityPromptService.PromptShown:Connect(function(prompt)
+    if autoInteractActivo and prompt.Enabled then
+        task.spawn(triggerPrompt, prompt)
+    end
+end)
+
+-- =================================================================
+-- 🎛️ INTEGRACIÓN CON LINORIALIB
+-- =================================================================
+
+-- Toggle para activar/desactivar
+TabBox2:AddToggle("AutoInteact", {
+    Text = "Interacción automática",
+    Tooltip = "Activa los prompts cercanos ignorando los elementos seleccionados",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        autoInteractActivo = Value
+    end,
+})
+
+-- Dropdown inteligente de elementos a ignorar
+local Dropdown2 = TabBox2:AddDropdown("ListaIgnorancia", {
+    Values = {"HidePrompt", "RevivePrompt", "InteractPrompt", "RiftPrompt", "StarRiftPrompt"},
+    Default = {"HidePrompt", "RevivePrompt", "InteractPrompt", "RiftPrompt", "StarRiftPrompt"},
+    Multi = true,
+    Text = "Lista de ignorancia",
+    Tooltip = "Selecciona qué nombres, partes o textos quieres evitar interactuar",
+    Disabled = false,
+
+    Callback = function(Value)
+        ignoradosSeleccionados = Value
+    end,
+})
+
+-- Sincronizar el estado inicial del Dropdown al ejecutar el script
+ignoradosSeleccionados = Dropdown2.Value
+
+TabBox2:AddDivider()
+
+local instantInteractActivo = false
+local conexionDescendantAdded = nil
+
+-- Tabla para memorizar la duración original de cada prompt sin borrarlos
+local duracionesOriginales = {}
+
+-- Cambia solo el tiempo de espera a 0 (mantiene el prompt activado y existiendo)
+local function aplicarInstantaneo(prompt)
+	if not prompt:IsA("ProximityPrompt") then return end
+	
+	if not duracionesOriginales[prompt] then
+		duracionesOriginales[prompt] = prompt.HoldDuration
+	end
+	
+	prompt.HoldDuration = 0
+end
+
+-- Devuelve el tiempo original al prompt sin alterar nada más
+local function restaurarInstantaneo(prompt)
+	if duracionesOriginales[prompt] and prompt.Parent then
+		prompt.HoldDuration = duracionesOriginales[prompt]
+	end
+end
+
+-- Tu Toggle de la UI
+TabBox2:AddToggle("InstantInteact", {
+	Text = "Interacción instantánea",
+	Tooltip = "El tiempo de activación de los prompts es instantánea",
+
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+
+	Callback = function(Value)
+		instantInteractActivo = Value
+		
+		if instantInteractActivo then
+			-- 1. Cambiamos el tiempo a los que ya están cargados en el mapa
+			for _, objeto in pairs(workspace:GetDescendants()) do
+				if objeto:IsA("ProximityPrompt") then
+					aplicarInstantaneo(objeto)
+				end
+			end
+			
+			-- 2. Cambiamos el tiempo a los nuevos que vayan apareciendo en nuevas habitaciones
+			conexionDescendantAdded = workspace.DescendantAdded:Connect(function(descendant)
+				if instantInteractActivo and descendant:IsA("ProximityPrompt") then
+					-- Un pequeño delay asegura que el script del juego no sobreescriba nuestro cambio
+					task.defer(aplicarInstantaneo, descendant)
+				end
+			end)
+		else
+			-- Desconectamos el detector de nuevas salas
+			if conexionDescendantAdded then
+				conexionDescendantAdded:Disconnect()
+				conexionDescendantAdded = nil
+			end
+			
+			-- Restauramos los segundos originales uno a uno
+			for prompt, _ in pairs(duracionesOriginales) do
+				restaurarInstantaneo(prompt)
+			end
+			
+			-- Vaciamos la lista de memoria
+			table.clear(duracionesOriginales)
+		end
+	end,
+})
+
+local TabBox4 = Tabs.FuncionesTab:AddLeftGroupbox("DesactivarEntidaddes", "x")
+local TabBox8 = Tabs.FuncionesTab:AddRightGroupbox("Adicionales", "list-plus")
+
+
+local Dread = modules and (modules:FindFirstChild("Dread") or modules:FindFirstChild("DreadX"))
+
+if not Dread then
+	Library:Notify("No se ha encontrado el módulo de Dread")
+    SonidoNotificacion:Play()
+end
+
+TabBox4:AddToggle("AntiDread", {
+	Text = "Anti Dread",
+	Tooltip = "Desactiva la aparición de Dread", -- Information shown when you hover over the toggle
+
+	Default = false, -- Default value (true / false)
+	Disabled = false, -- Will disable the toggle (true / false)
+	Visible = true, -- Will make the toggle invisible (true / false)
+	Risky = false, -- Makes the text red (the color can be changed using Library.Scheme.Red) (Default value = false)
+
+	Callback = function(Value)
+		if Value then
+			Dread.Name = "DreadX"
+		else
+			Dread.Name = "Dread"
+		end
+	end,
+})
+
+local screech = modules and (modules:FindFirstChild("Screech") or modules:FindFirstChild("ScreechX"))
+
+if not screech then
+	Library:Notify("No se ha encontrado el módulo de Screech")
+    SonidoNotificacion:Play()
+end
+
+TabBox4:AddToggle("AntiScreech", {
+	Text = "Anti Screech",
+	Tooltip = "Desactiva la aparición de Screech",
+
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+
+	Callback = function(Value)
+		if Value then
+			screech.Name = "ScreechX"
+		else
+			screech.Name = "Screech"
+		end
+	end,
+})
+
+-- =================================================================
+-- 🌟 MÓDULO ANTI-EYES
+-- =================================================================
+
+-- Variable para almacenar la conexión del evento
+local antiEyesConnection = nil
+
+TabBox4:AddToggle("AntiEyes", {
+    Text = "Anti Eyes",
+    Tooltip = "Desactiva el daño al mirar a Eyes",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        if Value then
+            -- Si ya existía una conexión previa por seguridad, la limpiamos antes
+            if antiEyesConnection then 
+                antiEyesConnection:Disconnect() 
+            end
+
+            -- Activamos la verificación continua cuando el Toggle está en ON
+            antiEyesConnection = RunService.Heartbeat:Connect(function()
+                if Workspace:FindFirstChild("Eyes") then
+                    RemotesFolder.MotorReplication:FireServer(-760)
+                end
+            end)
+        else
+            -- Si el Toggle se apaga (OFF), desconectamos el evento para optimizar rendimiento
+            if antiEyesConnection then
+                antiEyesConnection:Disconnect()
+                antiEyesConnection = nil
+            end
+        end
+    end,
+})
+
+-- Guardamos la conexión en una variable para poder activarla/desactivarla a gusto
+local conexionHabitacion = nil
+
+-- Modificamos la función para que reciba el estado que queremos ponerle al CanTouch
+local function RevisarPinchos(estadoCanTouch)
+    -- Si la función se ejecuta por el evento .Changed, estadoCanTouch será el número de habitación.
+    -- Por eso, si no es un booleano (true/false), forzamos a que sea false (AntiPinchos Activo).
+    if type(estadoCanTouch) ~= "boolean" then
+        estadoCanTouch = false
+    end
+
+    if workspace:FindFirstChild("CurrentRooms") then
+        for _, objeto in ipairs(workspace:FindFirstChild("CurrentRooms"):GetDescendants()) do
+            if objeto.Name == "Snare" then
+                local hitbox = objeto:FindFirstChild("Hitbox")
+                if hitbox and hitbox:IsA("BasePart") then
+                    hitbox.CanTouch = estadoCanTouch
+                end
+            end
+        end
+    end
+end
+
+TabBox4:AddToggle("AntiPinchos", {
+    Text = "Anti Pinchos",
+    Tooltip = "Desactiva el daño de los pinchos de las 10 últimas puertas",
+
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        if Value == true then
+            -- El usuario ACTIVÓ el Toggle:
+            -- 1. Quitamos el CanTouch inmediatamente (pasamos false)
+            RevisarPinchos(false)
+            
+            -- 2. Nos conectamos al evento para futuras salas
+            if not conexionHabitacion then
+                conexionHabitacion = HabitacionActual.Changed:Connect(RevisarPinchos)
+            end
+        else
+            -- El usuario DESACTIVÓ el Toggle:
+            -- 1. Rompemos la conexión para que deje de escuchar los cambios de sala
+            if conexionHabitacion then
+                conexionHabitacion:Disconnect()
+                conexionHabitacion = nil
+            end
+            
+            -- 2. Volvemos a ACTIVAR el CanTouch de todos los Snares actuales (pasamos true)
+            RevisarPinchos(true)
+        end
+    end,
+})
+
+-- =================================================================
+-- 🌟 MÓDULO ANTI-HALT (LINORIALIB)
+-- =================================================================
+-- Obtener evento original
+local ShadeEvent = RemotesFolder and RemotesFolder:FindFirstChild("ShadeResult")
+
+-- Crear/Recuperar el evento falso de respaldo
+local FakeShadeEvent = ReplicatedStorage:FindFirstChild("FakeShadeResult")
+if not FakeShadeEvent then
+    FakeShadeEvent = Instance.new("RemoteEvent")
+    FakeShadeEvent.Name = "FakeShadeResult"
+    FakeShadeEvent.Parent = ReplicatedStorage
+end
+
+-- Toggle en LinoriaLib
+TabBox4:AddToggle("AntiHalt", {
+    Text = "Anti Halt",
+    Tooltip = "Desactiva el daño de Halt",
+
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        if not RemotesFolder or not ShadeEvent then
+            Library:Notify("No se encontró el evento remoto 'ShadeResult'")
+            return 
+        end
+
+        if Value then
+            -- Redirige el evento real fuera de la carpeta de remotos
+            ShadeEvent.Parent = ReplicatedStorage
+            
+            -- Reemplaza con el evento falso para evitar que el servidor aplique daño
+            FakeShadeEvent.Name = "ShadeResult"
+            FakeShadeEvent.Parent = RemotesFolder
+        else
+            -- Restaura el evento original a su ubicación correspondiente
+            ShadeEvent.Parent = RemotesFolder
+            
+            -- Devuelve el evento falso a ReplicatedStorage
+            FakeShadeEvent.Name = "FakeShadeResult"
+            FakeShadeEvent.Parent = ReplicatedStorage
+        end
+    end,
+})
+
+-- =================================================================
+-- 🌟 MÓDULO ANTI-DUPE (CON DETECCIÓN DE HABITACIÓN)
+-- =================================================================
+
+-- Variable para almacenar la conexión del evento
+local antiDupeConnection = nil
+
+-- Función auxiliar para buscar y eliminar 'SideroomDupe' o puertas falsas de Dupe
+local function removeDupeRooms()
+    -- 1. Buscar directamente por el objeto 'SideroomDupe' en Workspace
+    for _, obj in ipairs(Workspace:GetChildren()) do
+        if obj.Name == "SideroomDupe" then
+            obj:Destroy()
+        end
+    end
+
+    -- 2. Buscar si dentro de las habitaciones (CurrentRooms) hay alguna puerta falsa de Dupe
+    local currentRooms = Workspace:FindFirstChild("CurrentRooms")
+    if currentRooms then
+        for _, room in ipairs(currentRooms:GetChildren()) do
+            local dupeRoom = room:FindFirstChild("SideroomDupe") or room:FindFirstChild("DupeRoom")
+            if dupeRoom then
+                dupeRoom:Destroy()
+            end
+        end
+    end
+end
+
+-- Toggle en LinoriaLib
+TabBox4:AddToggle("AntiDupe", {
+    Text = "Anti Dupe",
+    Tooltip = "Elimina la habitación falsa de Dupe al cambiar de habitación",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        -- Limpieza previa de la conexión por seguridad
+        if antiDupeConnection then
+            antiDupeConnection:Disconnect()
+            antiDupeConnection = nil
+        end
+
+        if Value then
+            -- Ejecución inicial inmediata por si ya existe al activar el toggle
+            task.spawn(removeDupeRooms)
+
+            -- Escuchar cuando cambia el valor de la Habitación Actual
+            if HabitacionActual then
+                antiDupeConnection = HabitacionActual.Changed:Connect(function()
+                    task.wait(0.2) -- Pequeña espera para asegurar que la nueva habitación se haya cargado
+                    removeDupeRooms()
+                end)
+            end
+        end
+    end,
+})
+
+local spamming = false
+
+TabBox4:AddToggle("AntiFigureSonidos", {
+	Text = "Anti sonidos de Figure",
+	Tooltip = "Desactiva la audición de los pasos para Figure",
+
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+
+	Callback = function(Value)
+		spamming = Value
+
+		if Value then
+			task.spawn(function()
+				while spamming do
+					game:GetService("ReplicatedStorage").RemotesFolder.Crouch:FireServer(true)
+					task.wait()
+					if not spamming then break end
+				end
+			end)
+		else
+			-- 🔊 RESET FORZADO: Enviamos el false varias veces seguidas para limpiar 
+			-- el spam anterior del servidor y asegurar que Figure vuelva a oírte.
+			task.spawn(function()
+				local remotos = game:GetService("ReplicatedStorage"):FindFirstChild("RemotesFolder")
+				local crouchRemote = remotos and remotos:FindFirstChild("Crouch")
+				
+				if crouchRemote then
+					for i = 1, 5 do
+						crouchRemote:FireServer(false)
+						task.wait(0.05)
+					end
+				end
+			end)
+		end
+	end,
+})
+
+-- =============================================================================
+-- INTEGRACIÓN DE CONFIGURACIÓN Y VARIABLES GLOBALES
+-- =============================================================================
+
+-- Variables de estado para el control de eventos
+local AutocompletarActivo = false
+local EstadoHojaEquipada = false
+local UltimoCodigoNotificado = ""
+local ConexionPrompt = nil -- Guardará la conexión del ProximityPrompt
+
+-- Diccionario de traducción basado en tus offsets X exactos
+local DiccionarioFiguras = {
+    [0]   = "pentagono",
+    [50]  = "Triangulo",
+    [100] = "Cuadrado",
+    [150] = "Estrella",
+    [200] = "Cruz",
+    [250] = "Hexagono",
+    [300] = "rombo",
+    [350] = "Circulo"
+}
+
+-- CORRECCIÓN: Se eliminó 'codigoFinal' de aquí arriba para que no acumule texto residual
+local TenemosCodigo = false
+
+-- Función auxiliar para verificar si la habitación actual es la 50
+local function estaEnHabitacion50()
+    local currentRooms = workspace:FindFirstChild("CurrentRooms")
+    if currentRooms and currentRooms:FindFirstChild("50") then
+        return true
+    end
+    return false
+end
+
+-- Función auxiliar para obtener el nombre de la figura según su ImageRectOffset.X
+local function obtenerNombreFigura(imageLabel)
+    if not imageLabel or not imageLabel:IsA("ImageLabel") then return nil end
+    local offsetX = math.round(imageLabel.ImageRectOffset.X)
+    return DiccionarioFiguras[offsetX]
+end
+
+-- Función principal que calcula la combinación y genera las alertas
+local function procesarCodigoBiblioteca(forzarNotificacion)
+    if not AutocompletarActivo or not estaEnHabitacion50() then return end
+
+    local localPlayer = game:GetService("Players").LocalPlayer
+    
+    -- Paso A: Obtener los números recolectados de los libros (Hints)
+    local hintsFolder = localPlayer.PlayerGui:FindFirstChild("PermUI") and localPlayer.PlayerGui.PermUI:FindFirstChild("Hints")
+    if not hintsFolder then return end
+
+    local librosTraducidos = {}
+    for _, item in ipairs(hintsFolder:GetChildren()) do
+        if item:IsA("ImageLabel") and item.Visible then
+            local figura = obtenerNombreFigura(item)
+            local textLabel = item:FindFirstChild("TextLabel")
+            
+            if figura and textLabel then
+                local numero = tonumber(textLabel.Text)
+                if numero then
+                    librosTraducidos[figura] = numero
+                end
+            end
+        end
+    end
+
+    -- Paso B: Buscar la hoja de pistas específicamente en el Personaje (Equipada)
+    local personaje = localPlayer.Character
+    local hoja = personaje and personaje:FindFirstChild("LibraryHintPaper")
+    
+    local uiHoja = hoja and hoja:FindFirstChild("UI")
+    if not uiHoja then return end
+
+    -- CORRECCIÓN AQUÍ: 'codigoFinal' ahora es LOCAL y empieza limpio ("") cada vez que se escanea la hoja
+    local codigoFinal = ""
+    local faltanLibros = false
+
+    -- Paso C: Descifrar el orden de las figuras desde la hoja (del 1 al 5)
+    for i = 1, 5 do
+        local ranuraHoja = uiHoja:FindFirstChild(tostring(i))
+        if ranuraHoja and ranuraHoja:IsA("ImageLabel") then
+            local figuraRequerida = obtenerNombreFigura(ranuraHoja)
+            
+            if figuraRequerida then
+                local numeroAsignado = librosTraducidos[figuraRequerida]
+                if numeroAsignado then
+                    codigoFinal = codigoFinal .. tostring(numeroAsignado)
+                else
+                    codigoFinal = codigoFinal .. "_"
+                    faltanLibros = true
+                end
+            else
+                codigoFinal = codigoFinal .. "?"
+            end
+        end
+    end
+
+    -- Paso D: Enviar notificación si el código cambió o si se forzó al equipar la hoja
+    if (codigoFinal ~= UltimoCodigoNotificado and codigoFinal ~= "") or forzarNotificacion then
+        UltimoCodigoNotificado = codigoFinal
+        
+        if faltanLibros then
+            Library:Notify("Código: " .. codigoFinal)
+            TenemosCodigo = false
+        else
+            Library:Notify("Código: " .. codigoFinal)
+            -- Guardamos el código limpio en una variable global compartida sólo si está completo
+            _G.CodigoPuerta50Guardado = codigoFinal 
+            TenemosCodigo = true
+        end
+        
+        if SonidoNotificacion then
+            SonidoNotificacion:Play()
+        end
+    end
+end
+
+-- Función para manejar el apagado del Highlight molesto de la puerta
+local function limpiarHighlightPuerta()
+    local currentRooms = workspace:FindFirstChild("CurrentRooms")
+    local room50 = currentRooms and currentRooms:FindFirstChild("50")
+    local puerta = room50 and room50:FindFirstChild("Door")
+    
+    if puerta then
+        for _, objeto in ipairs(puerta:GetDescendants()) do
+            if objeto:IsA("Highlight") and objeto.Enabled then
+                objeto.Enabled = false
+            end
+        end
+    end
+end
+
+-- Función para conectar/desconectar el evento del candado
+local function gestionarConexionPrompt(activar)
+    if activar then
+        if ConexionPrompt then ConexionPrompt:Disconnect() end
+        
+        task.spawn(function()
+            while AutocompletarActivo do
+                local currentRooms = workspace:FindFirstChild("CurrentRooms")
+                local room50 = currentRooms and currentRooms:FindFirstChild("50")
+                local padlock = room50 and room50:FindFirstChild("Door") and room50.Door:FindFirstChild("Padlock")
+                local prompt = padlock and padlock:FindFirstChild("ActivateEventPrompt")
+                
+                if prompt and prompt:IsA("ProximityPrompt") then
+                    ConexionPrompt = prompt.Triggered:Connect(function(player)
+                        if player == game:GetService("Players").LocalPlayer then
+                            limpiarHighlightPuerta()
+                        end
+                    end)
+                    break 
+                end
+                task.wait(1)
+            end
+        end)
+    else
+        if ConexionPrompt then
+            ConexionPrompt:Disconnect()
+            ConexionPrompt = nil
+        end
+    end
+end
+
+-- =============================================================================
+-- DECLARACIÓN DEL TOGGLE EN TU TABBOX
+-- =============================================================================
+
+TabBox8:AddToggle("AutocompletarCodigoDeLaBiblioteca", {
+    Text = "Completar código de hab 50",
+    Tooltip = "Autocompleta el puzle de la biblioteca",
+
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        AutocompletarActivo = Value
+        gestionarConexionPrompt(Value)
+        
+        if AutocompletarActivo then
+            local localPlayer = game:GetService("Players").LocalPlayer
+            local personaje = localPlayer.Character
+            local hojaEnPersonaje = personaje and personaje:FindFirstChild("LibraryHintPaper")
+            
+            if hojaEnPersonaje then
+                EstadoHojaEquipada = true
+                procesarCodigoBiblioteca(true) 
+            else
+                EstadoHojaEquipada = false
+            end
+        else
+            UltimoCodigoNotificado = ""
+            EstadoHojaEquipada = false
+            TenemosCodigo = false
+            _G.CodigoPuerta50Guardado = nil
+        end
+    end,
+})
+
+TabBox8:AddButton("BotonAbrirPuerta50", {
+    Text = "Abrir puerta 50",
+    Func = function()
+        -- Se asume que usas HabitacionActual.Value tal como venía en Doors2.lua
+        if HabitacionActual.Value == 50 then
+            if TenemosCodigo == true and _G.CodigoPuerta50Guardado then
+                game:GetService("ReplicatedStorage").RemotesFolder.PL:FireServer(_G.CodigoPuerta50Guardado)
+                Library:Notify("Puerta abierta correctamente")
+                SonidoNotificacion:Play()
+            else
+                Library:Notify("Tienes que descifrar el código completo primero")
+                SonidoNotificacion:Play()
+            end
+        else
+            SonidoNotificacion:Play()
+            Library:Notify("Debes de estar en la habitación 50 para realizar esa acción")
+        end
+    end,
+    
+    DoubleClick = false,
+    Tooltip = "Al hacer click la puerta 50 se abre sola (necesitas el código)",
+    Disabled = false, 
+    Visible = true, 
+    Risky = false, 
+})
+
+-- =============================================================================
+-- BUCLE EN SEGUNDO PLANO (DETECTOR DE EVENTO EQUIPAR HOJA Y ACTUALIZACIONES)
+-- =============================================================================
+
+task.spawn(function()
+	while task.wait(0.3) do
+		local localPlayer = game:GetService("Players").LocalPlayer
+		if AutocompletarActivo and estaEnHabitacion50() and localPlayer then
+			
+			local personaje = localPlayer.Character
+			local hojaEnPersonaje = personaje and personaje:FindFirstChild("LibraryHintPaper")
+			
+			-- Detectamos el momento exacto en que la hoja pasa al personaje (ya no está en la mochila)
+			if hojaEnPersonaje and not EstadoHojaEquipada then
+				EstadoHojaEquipada = true
+				procesarCodigoBiblioteca(true) -- Forzamos notificación al equipar
+			elseif not hojaEnPersonaje and EstadoHojaEquipada then
+				-- El jugador guardó la hoja de nuevo en el inventario
+				EstadoHojaEquipada = false
+			else
+				-- Actualización rutinaria por si agarra un libro con la hoja ya en la mano (sin duplicar)
+				procesarCodigoBiblioteca(false)
+			end
+			
+		end
+	end
+end)
+
+TabBox8:AddDivider()
+
+local modoDiosActivo = false
+local entidadesActivas = 0
+local conexionChildAdded = nil
+
+-- Variables de configuración física
+local ALTURA_OBJETIVO = 100 
+local VELOCIDAD_SUBIDA = 25 
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local JugadorLocal = Players.LocalPlayer
+
+local VelocidadHumanoidOriginal = JugadorHumanoid.WalkSpeed
+
+-- Función interna para subir al personaje (CORREGIDA)
+local function SubirPersonaje()
+	local Character = workspace:FindFirstChild(JugadorLocal.Name)
+	if not Character then return end
+	
+	local HRP = Character:FindFirstChild("HumanoidRootPart")
+	local Humanoid = Character:FindFirstChild("Humanoid")
+	if not HRP or not Humanoid or HRP.Anchored then return end
+	
+	local PosOriginalCFrame = HRP.CFrame
+	local PosOriginalVector = HRP.Position
+	Humanoid.PlatformStand = true
+
+	-- [CORRECCIÓN] Declaramos las variables locales correctamente aquí dentro para el bucle
+	local posicionActualY = PosOriginalVector.Y
+	local alturaFinalY = PosOriginalVector.Y + ALTURA_OBJETIVO
+
+	local conexionMovimiento
+	conexionMovimiento = RunService.Heartbeat:Connect(function(dt)
+		-- Verificación por si el personaje muere o se elimina en plena subida
+		if not HRP or not HRP.Parent then 
+			conexionMovimiento:Disconnect() 
+			return 
+		end
+		
+        Humanoid.WalkSpeed = 0
+
+		local distanciaAMover = VELOCIDAD_SUBIDA * dt
+		posicionActualY = math.min(posicionActualY + distanciaAMover, alturaFinalY)
+		
+		HRP.CFrame = CFrame.new(HRP.Position.X, posicionActualY, HRP.Position.Z) * PosOriginalCFrame.Rotation
+		
+		if posicionActualY >= alturaFinalY then
+			conexionMovimiento:Disconnect()
+		end
+	end)
+
+	-- Esperamos a que termine de subir
+	repeat task.wait() until posicionActualY >= alturaFinalY or not modoDiosActivo
+	
+	-- Si desactivaste el toggle mientras subía, cancelamos el anclaje
+	if not modoDiosActivo then return end
+
+	task.wait(0.5) -- Sincronización de red
+
+	HRP.Anchored = true
+	Humanoid.PlatformStand = false
+end
+
+-- Función para apagar el script y limpiar todo
+local function DesanclarYLimpiar()
+	entidadesActivas = 0
+	local Character = JugadorLocal.Character or workspace:FindFirstChild(JugadorLocal.Name)
+	local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
+	if HRP then
+		HRP.Anchored = false
+        JugadorHumanoid.WalkSpeed = VelocidadHumanoidOriginal
+	end
+end
+
+-- Tu Toggle de la UI
+TabBox8:AddToggle("ModoDios", {
+	Text = "Modo Dios (FE)",
+	Tooltip = "Te hace inmortal frente a Rush o Ambush",
+
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+
+	Callback = function(Value)
+		modoDiosActivo = Value
+		
+		if modoDiosActivo then
+			
+			-- Empezamos a escuchar el workspace
+			conexionChildAdded = workspace.ChildAdded:Connect(function(child)
+				if not modoDiosActivo then return end 
+				
+				if child.Name == "RushMoving" or child.Name == "AmbushMoving" then
+					entidadesActivas = entidadesActivas + 1
+					
+					if entidadesActivas == 1 then
+						task.spawn(SubirPersonaje)
+					end
+					
+					child.Destroying:Wait()
+					
+					entidadesActivas = math.max(0, entidadesActivas - 1)
+					
+					if entidadesActivas == 0 and modoDiosActivo then
+						task.wait(1)
+						local Character = JugadorLocal.Character or workspace:FindFirstChild(JugadorLocal.Name)
+						local HRP = Character and Character:FindFirstChild("HumanoidRootPart")
+						if HRP and HRP.Anchored then
+							HRP.Anchored = false
+						end
+					end
+				end
+			end)
+		else
+			if conexionChildAdded then
+				conexionChildAdded:Disconnect()
+				conexionChildAdded = nil
+			end
+			DesanclarYLimpiar()
+		end
+	end,
+})
+
+TabBox8:AddToggle("EliminarSustos", {
+    Text = "Eliminar Sustos",
+    Tooltip = "Elimina los sustos de las entidades",
+
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        pcall(function()
+            local jumpscares = JugadorLocal.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Jumpscares
+            local modules = JugadorLocal.PlayerGui.MainUI.Initiator.Main_Game.RemoteListener.Modules
+
+            -- Tabla con los nombres originales y sus versiones modificadas con "X"
+            local sustosJumpscares = {"Ambush", "Rush", "Fool", "Seek"}
+            local sustosModules = {"SpiderJumpscare"}
+
+            if Value then
+                -- 🚫 DESACTIVAR SUSTOS (Añade la "X")
+                for _, nombre in ipairs(sustosJumpscares) do
+                    local objeto = jumpscares:FindFirstChild(nombre)
+                    if objeto then
+                        objeto.Name = nombre .. "X"
+                    end
+                end
+
+                for _, nombre in ipairs(sustosModules) do
+                    local objeto = modules:FindFirstChild(nombre)
+                    if objeto then
+                        objeto.Name = nombre .. "X"
+                    end
+                end
+            else
+                -- 🔄 RESTAURAR SUSTOS (Quita la "X")
+                for _, nombre in ipairs(sustosJumpscares) do
+                    local objeto = jumpscares:FindFirstChild(nombre .. "X")
+                    if objeto then
+                        objeto.Name = nombre
+                    end
+                end
+
+                for _, nombre in ipairs(sustosModules) do
+                    local objeto = modules:FindFirstChild(nombre .. "X")
+                    if objeto then
+                        objeto.Name = nombre
+                    end
+                end
+            end
+        end)
+    end,
+})
+
+-- =================================================================
+-- 🏃‍♂️ MÓDULO ANTI-OBSTRUCCIONES SEEK
+-- =================================================================
+
+-- Variables de control
+local antiObstruccionesActivo = false
+local conexionSeek = nil
+local partesModificadas = {}
+
+-- Función para restaurar las partes a su estado original
+local function restaurarPartes()
+    for part, canTouchOriginal in pairs(partesModificadas) do
+        if part and part.Parent then
+            part.CanTouch = canTouchOriginal
+        end
+    end
+    partesModificadas = {}
+end
+
+-- Función principal para procesar las partes dañinas/obstrucciones
+local function procesarObstruccionesSeek()
+    if not antiObstruccionesActivo then
+        restaurarPartes()
+        return
+    end
+
+    local currentRooms = Workspace:FindFirstChild("CurrentRooms")
+    if not currentRooms then return end
+
+    -- Verificamos si existe el evento de la persecución de Seek en la habitación
+    local seekTriggerFound = false
+    for _, desc in ipairs(currentRooms:GetDescendants()) do
+        if desc.Name == "TriggerSeek" then
+            seekTriggerFound = true
+            break
+        end
+    end
+
+    -- Si se detecta la persecución de Seek, modificamos las HurtPart
+    if seekTriggerFound then
+        for _, desc in ipairs(currentRooms:GetDescendants()) do
+            if desc.Name == "HurtPart" and desc:IsA("BasePart") then
+                if partesModificadas[desc] == nil then
+                    partesModificadas[desc] = desc.CanTouch
+                end
+                desc.CanTouch = false
+            end
+        end
+    end
+end
+
+-- Toggle en LinoriaLib
+TabBox8:AddToggle("AntiObstruccionesSeek", {
+    Text = "Obstrucciones Seek",
+    Tooltip = "Desactiva los objetos que obstruyen el camino en la persecución de Seek",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        antiObstruccionesActivo = Value
+
+        -- Limpieza de conexión previa si existía
+        if conexionSeek then
+            conexionSeek:Disconnect()
+            conexionSeek = nil
+        end
+
+        if Value then
+            -- Ejecución inmediata por si ya estamos en la sala de Seek
+            procesarObstruccionesSeek()
+
+            -- Escuchamos únicamente cuando cambia el valor de la habitación actual
+            if HabitacionActual then
+                conexionSeek = HabitacionActual.Changed:Connect(function()
+                    task.wait(0.1) -- Breve margen para permitir la carga de la sala
+                    procesarObstruccionesSeek()
+                end)
+            end
+        else
+            -- Restauramos el estado normal si se apaga el Toggle
+            restaurarPartes()
+        end
+    end,
+})
+
+local TabBox4 = Tabs.VisualesTab:AddLeftTabbox()
+local Tab3 = TabBox4:AddTab("ESP", "moon-star")
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL (ESTADO DEL MENÚ)
+-- ==========================================
+_G.EntidadesESP = false              
+_G.ColorEntidades = Color3.fromRGB(255, 0, 0) 
+_G.EntidadesSeleccionadas = {}
+_G.TextoESP_Config = { ["Entidades"] = true }     
+
+-- Tabla de traducción: Vincula el nombre interno del juego con la opción de tu menú
+local nombresJuego = {
+    ["RushMoving"] = "Rush",
+    ["AmbushMoving"] = "Ambush",
+    ["FigureRig"] = "Figure",
+    ["Eyes"] = "Eyes",
+    ["SallyMoving"] = "Sally"
+}
+
+-- ⚡ Memoria caché para almacenar las entidades activas y acelerar el cambio de color
+local entidadesActivas = {}
+
+-- ==========================================
+-- 👁️ MONITOREO DE SUB-CARPETAS EN TIEMPO REAL
+-- ==========================================
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("Model") and nombresJuego[descendant.Name] then
+        aplicarHighlightLimpio(descendant)
+    end
+end)
+
+-- Limpieza automática de la memoria caché cuando los monstruos desaparezcan
+workspace.DescendantRemoving:Connect(function(descendant)
+    if entidadesActivas[descendant] then
+        entidadesActivas[descendant] = nil
+    end
+end)
+
+-- =============================================================================
+-- 🛡️ CONTROLADOR MAESTRO DE TEXTO INTEGRADO (ANTI-INVISIBILIDAD Y BORRADOS)
+-- =============================================================================
+task.spawn(function()
+    while task.wait(0.1) do 
+        if _G.TextoESP_Config and _G.TextoESP_Config["Entidades"] == true then
+            local miPersonaje = JugadorLocal.Character or workspace:FindFirstChild(JugadorLocal.Name)
+            local miRaiz = miPersonaje and miPersonaje:FindFirstChild("HumanoidRootPart")
+            
+            for modelo, objetivo in pairs(entidadesActivas) do
+                if modelo and modelo.Parent and objetivo and objetivo.Parent then
+                    local nombreMenu = nombresJuego[modelo.Name]
+                    
+                    -- Si el monstruo es válido, gestionamos el texto en un solo sitio
+                    local bbGui = objetivo:FindFirstChild("EntidadTexto")
+                    if not bbGui then
+                        bbGui = Instance.new("BillboardGui")
+                        bbGui.Name = "EntidadTexto"
+                        bbGui.Size = UDim2.new(0, 250, 0, 40) -- Ancho extra para evitar cortes de texto
+                        bbGui.StudsOffset = Vector3.new(0, 4, 0) 
+                        bbGui.Adornee = objetivo
+                        bbGui.Parent = objetivo
+                    end
+                    
+                    -- BLINDAJE INTERFAZ: Forzamos propiedades de visibilidad total
+                    bbGui.AlwaysOnTop = true
+                    bbGui.Enabled = true
+                    
+                    local label = bbGui:FindFirstChild("Label")
+                    if not label then
+                        label = Instance.new("TextLabel")
+                        label.Name = "Label"
+                        label.Size = UDim2.new(1, 0, 1, 0)
+                        label.TextSize = 20
+                        label.Font = Enum.Font.SourceSansBold
+                        label.TextStrokeTransparency = 0       
+                        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                        label.Parent = bbGui
+                    end
+                    
+                    -- BLINDAJE PROPIEDADES: Forzamos la eliminación de cualquier intento de ocultación externa
+                    label.Visible = true
+                    label.BackgroundTransparency = 1 -- Fondo transparente
+                    label.TextTransparency = 0       -- Totalmente opaco (Visible a la fuerza)
+                    
+                    if label then
+                        local parteEntidad = modelo:FindFirstChildWhichIsA("BasePart", true)
+                        if parteEntidad then
+                            local nombreAMostrar = nombresPersonalizados[nombreMenu] or nombreMenu or "Entidad"
+                            
+                            -- Sincronizar color del ColorPicker en caliente
+                            if label.TextColor3 ~= _G.ColorEntidades then
+                                label.TextColor3 = _G.ColorEntidades
+                            end
+
+                            -- Cálculo matemático de distancia en studs
+                            local distancia = miRaiz and (miRaiz.Position - parteEntidad.Position).Magnitude or 0
+                            
+                            -- Unificación absoluta en un solo String de texto
+                            local textoFinal = string.format("%s [%.1f]", nombreAMostrar, distancia)
+
+                            -- Filtro anti-parpadeo de asignación
+                            if label.Text ~= textoFinal then
+                                label.Text = textoFinal
+                            end
+                        end
+                    end
+                else
+                    -- Limpieza si el cartel existente se queda huérfano
+                    if objetivo then
+                        local cartelViejo = objetivo:FindFirstChild("EntidadTexto")
+                        if cartelViejo then cartelViejo:Destroy() end
+                    end
+                    entidadesActivas[modelo] = nil 
+                end
+            end
+        else
+            -- Si el Toggle general se apaga, eliminamos inmediatamente todos los textos activos
+            for modelo, objetivo in pairs(entidadesActivas) do
+                if objetivo then
+                    local bbGui = objetivo:FindFirstChild("EntidadTexto")
+                    if bbGui then bbGui:Destroy() end
+                end
+            end
+        end
+    end
+end)
+
+-- ==========================================
+-- 🎛️ CONFIGURACIÓN DE TU INTERFAZ (UI CODES)
+-- ==========================================
+
+local Dropdown3 = Tab3:AddDropdown("EntidadesESP", {
+    Values = {"Rush", "Ambush", "Eyes", "Figure", "Sally"},
+    Default = {},
+    Multi = true, 
+    Text = "Lista de entidades",
+    Tooltip = "Elige las entidades para aplicarles ESP",
+    
+    Callback = function(Value)
+        _G.EntidadesSeleccionadas = Value
+        actualizarEntidadesExistentes() 
+    end,
+    Disabled = false,
+})
+
+Tab3:AddToggle("EntidadesESP",{
+    Text = "Entidades",
+    Tooltip = "Activa la visión de entidades",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.EntidadesESP = Value
+        actualizarEntidadesExistentes() 
+    end,
+}):AddColorPicker("ColorPickerEntidades", {
+    Default = Color3.fromRGB(255, 0, 0),
+    Title = "Selecciona un color",
+
+    Callback = function(Value)
+        _G.ColorEntidades = Value -- Guarda el color globalmente para el bucle
+        
+        -- Cambio de color caliente e inmediato en el contorno físico
+        for modelo, objetivo in pairs(entidadesActivas) do
+            if modelo and modelo.Parent and objetivo then
+                -- 1. Actualiza el contorno/relleno del Highlight
+                local h = objetivo:FindFirstChild("EntidadHighlight")
+                if h then h.FillColor = Value end
+                
+                -- 📝 El texto ya NO lo tocamos aquí para evitar que luche contra el bucle
+            else
+                entidadesActivas[modelo] = nil
+            end
+        end
+    end
+})
+
+Tab3:AddDivider()
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL PARA JUGADORES
+-- ==========================================
+_G.JugadoresESP = false
+_G.ColorJugadores = Color3.fromRGB(255, 255, 255) -- Blanco por defecto
+
+local Players = game:GetService("Players")
+local localPlayer = Players.LocalPlayer
+
+-- Memoria caché para los personajes de otros jugadores
+local jugadoresActivos = {}
+
+-- ==========================================
+-- 🔮 LÓGICA PRINCIPAL DEL ESP DE JUGADORES
+-- ==========================================
+local function aplicarJugadorESP(player)
+    -- 🛑 EXCLUSIÓN: Si es el jugador local, no hacer absolutamente nada
+    if player == localPlayer then return end
+
+    local function enCharacterAdded(character)
+        task.wait(0.1) -- Espera corta a que carguen las extremidades
+        if not character:IsDescendantOf(workspace) then return end
+
+        -- Guardamos el personaje en la caché
+        jugadoresActivos[player] = character
+
+        -- 🔴 SI SE DESACTIVA EL TOGGLE: Eliminar Highlight de inmediato
+        if not _G.JugadoresESP then
+            local hViejo = character:FindFirstChild("JugadorHighlight")
+            if hViejo then hViejo:Destroy() end
+            return
+        end
+
+        -- 🛠️ INYECCIÓN / ACTUALIZACIÓN DEL HIGHLIGHT
+        local h = character:FindFirstChild("JugadorHighlight")
+        if not h then
+            h = Instance.new("Highlight")
+            h.Name = "JugadorHighlight"
+            h.OutlineColor = Color3.fromRGB(0, 0, 0) -- Contorno negro para resaltar el blanco
+            h.FillTransparency = 0.5
+            h.OutlineTransparency = 0
+            h.Adornee = character
+            h.Parent = character
+        end
+
+        h.Enabled = _G.JugadoresESP
+        h.FillColor = _G.ColorJugadores
+    end
+
+    -- Conectar si el personaje ya existe o cuando reaparezca
+    if player.Character then
+        task.spawn(enCharacterAdded, player.Character)
+    end
+    player.CharacterAdded:Connect(enCharacterAdded)
+end
+
+-- Función para refrescar a todos cuando tocas el Toggle
+function actualizarJugadoresExistentes()
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= localPlayer and player.Character then
+            aplicarJugadorESP(player)
+        end
+    end
+end
+
+-- ==========================================
+-- 👁️ MONITOREO DE ENTRADA Y SALIDA DE JUGADORES
+-- ==========================================
+-- Escucha a los jugadores actuales y a los que se unan a la partida
+for _, player in pairs(Players:GetPlayers()) do
+    aplicarJugadorESP(player)
+end
+
+Players.PlayerAdded:Connect(function(player)
+    aplicarJugadorESP(player)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    if jugadoresActivos[player] then
+        jugadoresActivos[player] = nil
+    end
+end)
+
+-- ==========================================
+-- 🎛️ TU INTERFAZ INTEGRADA
+-- ==========================================
+Tab3:AddToggle("JugadoresESP",{
+    Text = "Jugadores",
+    Tooltip = "Activa la visión de los jugadores",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.JugadoresESP = Value
+        actualizarJugadoresExistentes() 
+    end,
+}):AddColorPicker("ColorPickerJugadores", {
+    Default = Color3.fromRGB(255, 255, 255), 
+    Title = "Selecciona un color",
+    Transparency = nil, -- Sin barra de transparencia
+
+    Callback = function(Value)
+        _G.ColorJugadores = Value
+        
+        -- ⚡ Cambio de color instantáneo mediante la caché (Cero Lag)
+        if _G.JugadoresESP then
+            for player, character in pairs(jugadoresActivos) do
+                if character and character.Parent then
+                    local h = character:FindFirstChild("JugadorHighlight")
+                    if h then
+                        h.FillColor = Value
+                    end
+                else
+                    jugadoresActivos[player] = nil
+                end
+            end
+        end
+    end,
+})
+
+-- =============================================================================
+-- 🛡️ INTEGRACIÓN BLINDADA: SEPARACIÓN DE CONTORNO (ESP) Y TEXTO DINÁMICO
+-- =============================================================================
+
+local PuertasESP_Activo = false 
+local ColorPuertas = Color3.fromRGB(0, 255, 255) 
+
+local puertaActualModelo = nil
+local parteFisicaActual = nil
+local scriptBucleActivo = false
+
+-- 📦 CONTENEDOR SEGURO: Interfaz aislada externa (Evita alterar instancias del mapa)
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "AsistentePuertas_Gui"
+local exitoCore, _ = pcall(function() ScreenGui.Parent = game:GetService("CoreGui") end)
+if not exitoCore then ScreenGui.Parent = JugadorLocal:WaitForChild("PlayerGui") end
+
+local function buscarParteBase(puertaModel)
+    if not puertaModel then return nil end
+    local hit = puertaModel:FindFirstChild("Door") or puertaModel:FindFirstChild("Panel") or puertaModel:FindFirstChild("Frame")
+    if hit and hit:IsA("BasePart") then return hit end
+    return puertaModel:FindFirstChildWhichIsA("BasePart", true)
+end
+
+local function limpiarVisualesPuertas()
+    puertaActualModelo = nil
+    parteFisicaActual = nil
+    
+    -- Limpieza pasiva total en nuestro contenedor seguro
+    for _, obj in ipairs(ScreenGui:GetChildren()) do
+        if obj.Name == "SecureHighlight" or obj.Name == "DoorTexto" then
+            obj:Destroy()
+        end
+    end
+end
+
+local function aplicarVisualesPuerta(doorModel)
+    if not doorModel or not doorModel:IsA("Model") then return end
+    if doorModel.Name:find("Dupe") or doorModel.Name == "DoorFake" then return end
+    
+    -- 👁️ MANIPULACIÓN SEGURA DE HIDDEN: Opacidad a 1 para evadir el Anticheat
+    pcall(function()
+        local hiddenObj = doorModel:FindFirstChild("Hidden")
+        if hiddenObj then
+            if hiddenObj:IsA("BasePart") then
+                hiddenObj.Transparency = 1
+            else
+                for _, p in ipairs(hiddenObj:GetDescendants()) do
+                    if p:IsA("BasePart") then p.Transparency = 1 end
+                end
+            end
+        end
+    end)
+
+    if doorModel:FindFirstChild("Sign") then
+        local parteObjetivo = buscarParteBase(doorModel)
+        if not parteObjetivo then return end
+        
+        puertaActualModelo = doorModel
+        parteFisicaActual = parteObjetivo
+
+        -- 🟢 HIGHLIGHT (CONTORNO INDEPENDIENTE)
+        local h = ScreenGui:FindFirstChild("SecureHighlight")
+        if not PuertasESP_Activo then
+            if h then h:Destroy() end
+        else
+            if not h then
+                h = Instance.new("Highlight")
+                h.Name = "SecureHighlight"
+                h.OutlineColor = Color3.fromRGB(255, 255, 255)
+                h.FillTransparency = 0.5
+                h.OutlineTransparency = 0
+                h.Parent = ScreenGui 
+            end
+            h.Adornee = doorModel 
+            h.Enabled = true
+            h.FillColor = ColorPuertas
+        end
+    end
+end
+
+local function actualizarHabitacionActual()
+    -- Guardamos si el Highlight estaba prendido antes de resetear
+    local prevHighlight = PuertasESP_Activo
+    
+    limpiarVisualesPuertas()
+    
+    PuertasESP_Activo = prevHighlight
+    
+    local rooms = workspace:FindFirstChild("CurrentRooms")
+    if not rooms then return end
+
+    local salaTarget = HabitacionActual and HabitacionActual.Value
+    if not salaTarget then return end
+
+    local roomActual = rooms:FindFirstChild(tostring(salaTarget))
+    if not roomActual then return end
+
+    pcall(function()
+        local puertaEncontrada = nil
+        for _, desc in ipairs(roomActual:GetDescendants()) do
+            if desc.Name == "Door" and desc:IsA("Model") and desc:FindFirstChild("Sign") then
+                puertaEncontrada = desc
+                break
+            end
+        end
+
+        if puertaEncontrada then
+            aplicarVisualesPuerta(puertaEncontrada)
+        end
+    end)
+end
+
+-- =============================================================================
+-- 🔮 BUCLE DE RENDERIZADO (TEXTO + TAMAÑO DINÁMICO COMPATIBLE CON SLIDER)
+-- =============================================================================
+local function iniciarBucleRenderizado()
+    if scriptBucleActivo then return end
+    scriptBucleActivo = true
+    
+    task.spawn(function()
+        while scriptBucleActivo do
+            pcall(function()
+                local personaje = JugadorLocal.Character
+                local raiz = personaje and personaje:FindFirstChild("HumanoidRootPart")
+
+                local textoMaestroEncendido = Toggles.TextoESP and Toggles.TextoESP.Value
+                local puertasSeleccionadas = _G.TextoESP_Config and _G.TextoESP_Config["Puertas"] == true
+
+                if textoMaestroEncendido and puertasSeleccionadas and puertaActualModelo and puertaActualModelo.Parent and parteFisicaActual and parteFisicaActual.Parent then
+                    
+                    local bbGui = ScreenGui:FindFirstChild("DoorTexto")
+                    if not bbGui then
+                        bbGui = Instance.new("BillboardGui")
+                        bbGui.Name = "DoorTexto"
+                        bbGui.Size = UDim2.new(0, 200, 0, 40)
+                        bbGui.AlwaysOnTop = true
+                        bbGui.Parent = ScreenGui
+                    end
+                    
+                    if bbGui.Adornee ~= parteFisicaActual then
+                        bbGui.Adornee = parteFisicaActual
+                    end
+
+                    local label = bbGui:FindFirstChild("Label")
+                    if not label then
+                        label = Instance.new("TextLabel")
+                        label.Name = "Label"
+                        label.Size = UDim2.new(1, 0, 1, 0)
+                        label.Font = Enum.Font.SourceSansBold
+                        label.TextStrokeTransparency = 0
+                        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                        label.BackgroundTransparency = 1
+                        label.Parent = bbGui
+                    end
+
+                    label.TextColor3 = ColorPuertas
+                    
+                    -- 🌟 VINCULACIÓN CON EL SLIDER DE TAMAÑO:
+                    -- Intentamos leer Options.Tamano.Value (o Toggles.Tamano.Value según LinoriaLib). Si no existe, usa 20 por defecto.
+                    local tamanoMenu = Options and Options.Tamano and Options.Tamano.Value or 20
+                    label.TextSize = tamanoMenu
+
+                    if raiz then
+                        local numeroSalaBase = HabitacionActual and tonumber(HabitacionActual.Value) or 0
+                        local numeroSiguientePuerta = numeroSalaBase + 1
+                        local distancia = (raiz.Position - parteFisicaActual.Position).Magnitude
+                        
+                        label.Text = string.format("Puerta %d [%.1f m]", numeroSiguientePuerta, distancia)
+                        label.Visible = true
+                    end
+                else
+                    local bbGui = ScreenGui:FindFirstChild("DoorTexto")
+                    if bbGui then bbGui:Destroy() end
+                end
+            end)
+            task.wait(0.08)
+        end
+    end)
+end
+-- Iniciar el hilo continuo de distancias al arrancar el script principal
+iniciarBucleRenderizado()
+
+-- Conexión de evento nativo al cambiar de habitación
+if HabitacionActual then
+    HabitacionActual.Changed:Connect(function()
+        task.wait(0.05)
+        actualizarHabitacionActual()
+    end)
+end
+
+-- =============================================================================
+-- 🎛️ DEFINICIONES INTERFACES (Añade esto en las secciones correspondientes de tu UI)
+-- =============================================================================
+
+-- 1. Tu Toggle original de Puertas (Maneja solo el Contorno)
+Tab3:AddToggle("PuertasESP", {
+    Text = "Puertas ESP",
+    Tooltip = "Muestra el contorno iluminado de la siguiente puerta de salida",
+    Default = false,
+    Callback = function(Value)
+        PuertasESP_Activo = Value
+        actualizarHabitacionActual()
+    end
+}):AddColorPicker("ColorPickerPuertas", {
+    Default = Color3.fromRGB(0, 255, 255),
+    Title = "Color del ESP de Puertas",
+    Callback = function(Value)
+        ColorPuertas = Value
+        local h = ScreenGui:FindFirstChild("SecureHighlight")
+        if h then h.FillColor = Value end
+    end
+})
+
+-- 2. Exportación global para que tu Dropdown Multi-Seleccionador refresque las puertas
+function _G.actualizarPuertasTexto()
+    -- Esta función se manda llamar desde tu Callback del multi-dropdown
+    actualizarHabitacionActual()
+end
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL PARA OBJETIVOS
+-- ==========================================
+_G.ObjetivosESP = false
+_G.ColorObjetivos = Color3.fromRGB(0, 255, 0) -- Verde brillante por defecto
+
+-- Lista actualizada de nombres técnicos de los objetivos en Doors
+local nombresObjetivos = {
+    ["Key"] = true,
+    ["LiveHintKey"] = true,
+    ["Fuse"] = true,
+    ["LeverForGate"] = true,
+    ["LiveBreakerPolePickup"] = true -- Añadido: Interruptores sala 100
+}
+
+-- Memoria caché para los objetivos activos en el mapa
+local objetivosActivos = {}
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL PARA OBJETIVOS
+-- ==========================================
+_G.ObjetivosESP = false
+_G.ColorObjetivos = Color3.fromRGB(0, 255, 0) -- Verde brillante por defecto
+
+-- Lista de nombres técnicos corregida según tus indicaciones
+local nombresObjetivos = {
+    ["ElectricalKeyObtain"] = true, -- Cambiado por Key
+    ["LiveHintKey"] = true,
+    ["LeverForGate"] = true,
+    ["LiveBreakerPolePickup"] = true,
+	["LibraryHintPaper"] = true,
+	["LiveHintBook"] = true,
+    ["KeyObtain"] = true,
+}
+
+-- Memoria caché para los objetivos activos en el mapa
+local objetivosActivos = {}
+
+-- ==========================================
+-- 🔮 LÓGICA PRINCIPAL DEL ESP DE OBJETIVOS
+-- ==========================================
+local function aplicarObjetivosESP(objeto)
+    if not nombresObjetivos[objeto.Name] then return end
+    task.wait(0.1) -- Espera corta para que el modelo cargue sus partes físicas
+
+    -- Guardamos en la memoria caché
+    objetivosActivos[objeto] = objeto
+
+    -- 🔴 SI SE DESACTIVA EL TOGGLE: Eliminar Highlight de inmediato
+    if not _G.ObjetivosESP then
+        local hViejo = objeto:FindFirstChild("ObjetivoHighlight")
+        if hViejo then hViejo:Destroy() end
+        return
+    end
+
+    -- 🛠️ INYECCIÓN / ACTUALIZACIÓN DEL HIGHLIGHT (Directo dentro del modelo)
+    local h = objeto:FindFirstChild("ObjetivoHighlight")
+    if not h then
+        h = Instance.new("Highlight")
+        h.Name = "ObjetivoHighlight"
+        h.OutlineColor = Color3.fromRGB(255, 255, 255) -- Contorno blanco
+        h.FillTransparency = 0.5
+        h.OutlineTransparency = 0
+        h.Adornee = objeto -- Ilumina exactamente este objeto/modelo
+        h.Parent = objeto   -- Ubicado dentro del modelo físico
+    end
+
+    h.Enabled = _G.ObjetivosESP
+    h.FillColor = _G.ColorObjetivos
+end
+
+-- Función para escanear y refrescar los objetivos cuando tocas el Toggle
+function actualizarObjetivosExistentes()
+    for _, desc in pairs(workspace:GetDescendants()) do
+        if nombresObjetivos[desc.Name] then
+            aplicarObjetivosESP(desc)
+        end
+    end
+end
+
+-- ==========================================
+-- 👁️ MONITOREO EN TIEMPO REAL
+-- ==========================================
+workspace.DescendantAdded:Connect(function(descendant)
+    if nombresObjetivos[descendant.Name] then
+        aplicarObjetivosESP(descendant)
+    end
+end)
+
+workspace.DescendantRemoving:Connect(function(descendant)
+    if objetivosActivos[descendant] then
+        objetivosActivos[descendant] = nil
+    end
+end)
+
+-- ==========================================
+-- 🎛️ TU INTERFAZ INTEGRADA
+-- ==========================================
+Tab3:AddToggle("ObjetivosESP",{
+    Text = "Objetivos",
+    Tooltip = "Activa la visión de los objetivos",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.ObjetivosESP = Value
+        actualizarObjetivosExistentes() 
+    end,
+}):AddColorPicker("ColorPickerObjetivos", {
+    Default = Color3.fromRGB(0, 255, 0), 
+    Title = "Selecciona un color",
+    Transparency = nil, -- Sin barra de transparencia
+
+    Callback = function(Value)
+        _G.ColorObjetivos = Value
+        
+        -- ⚡ Cambio de color instantáneo mediante la caché
+        if _G.ObjetivosESP then
+            for _, objetoItem in pairs(objetivosActivos) do
+                if objetoItem and objetoItem.Parent then
+                    local h = objetoItem:FindFirstChild("ObjetivoHighlight")
+                    if h then
+                        h.FillColor = Value
+                    end
+                else
+                    objetivosActivos[objetoItem] = nil
+                end
+            end
+        end
+    end,
+})
+
+Tab3:AddDivider()
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL PARA EL ORO
+-- ==========================================
+_G.OroESP = false
+_G.ColorOro = Color3.fromRGB(255, 255, 0) -- Amarillo por defecto
+
+-- Memoria caché para el oro activo en el mapa
+local oroActivo = {}
+
+-- ==========================================
+-- 🔮 LÓGICA PRINCIPAL DEL ESP DE ORO
+-- ==========================================
+local function aplicarOroESP(objeto)
+    if objeto.Name ~= "GoldPile" and objeto.Name ~= "Gold" then return end
+    task.wait(0.1) 
+
+    -- 1. SE GUARDA EN CACHÉ PRIMERO (Pase lo que pase)
+    oroActivo[objeto] = objeto
+
+    -- 2. SI EL ACCESO ESTÁ APAGADO, SE LIMPIA EL VISUAL PERO SE QUEDA EN CACHÉ
+    local hViejo = objeto:FindFirstChild("OroHighlight")
+    if not _G.OroESP then
+        if hViejo then hViejo:Destroy() end
+        return
+    end
+
+    -- 3. SI ESTÁ ACTIVADO, SE CREA EL HIGHLIGHT NORMALMENTE
+    local h = hViejo or Instance.new("Highlight")
+    if not hViejo then
+        h.Name = "OroHighlight"
+        h.OutlineColor = Color3.fromRGB(255, 255, 255) 
+        h.FillTransparency = 0.5
+        h.OutlineTransparency = 0
+        h.Adornee = objeto
+        h.Parent = objeto
+    end
+
+    h.Enabled = _G.OroESP
+    h.FillColor = _G.ColorOro
+end
+
+-- Función para escanear y refrescar el oro cuando tocas el Toggle
+function actualizarOroExistente()
+    for _, desc in pairs(workspace:GetDescendants()) do
+        if desc.Name == "GoldPile" or desc.Name == "Gold" then
+            aplicarOroESP(desc)
+        end
+    end
+end
+
+-- ==========================================
+-- 👁️ MONITOREO DE NUEVO ORO EN TIEMPO REAL
+-- ==========================================
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant.Name == "GoldPile" or descendant.Name == "Gold" then
+        aplicarOroESP(descendant)
+    end
+end)
+
+workspace.DescendantRemoving:Connect(function(descendant)
+    if oroActivo[descendant] then
+        oroActivo[descendant] = nil
+    end
+end)
+
+-- ==========================================
+-- 🎛️ TU INTERFAZ INTEGRADA
+-- ==========================================
+Tab3:AddToggle("OroESP",{
+    Text = "Oro",
+    Tooltip = "Activa la visión de oro",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.OroESP = Value
+        actualizarOroExistente() 
+    end,
+}):AddColorPicker("ColorPickerOro", {
+    Default = Color3.fromRGB(255, 255, 0), 
+    Title = "Selecciona un color",
+    Transparency = nil, -- Sin barra de transparencia
+
+    Callback = function(Value)
+        _G.ColorOro = Value
+        
+        -- ⚡ Cambio de color instantáneo mediante caché
+        if _G.OroESP then
+            for _, objetoOro in pairs(oroActivo) do
+                if objetoOro and objetoOro.Parent then
+                    local h = objetoOro:FindFirstChild("OroHighlight")
+                    if h then
+                        h.FillColor = Value
+                    end
+                else
+                    oroActivo[objetoOro] = nil
+                end
+            end
+        end
+    end,
+})
+
+-- ==========================================
+-- 🎒 VARIABLES DE CONTROL PARA OBJETOS
+-- ==========================================
+_G.ObjetosESP = false
+_G.ColorObjetos = Color3.fromRGB(74, 74, 74) -- Gris por defecto
+
+-- Diccionario con todos los objetos extraídos de la captura
+local nombresObjetos = {
+    ["AlarmClock"] = true,
+    ["AloeVera"] = true,
+    ["Bandage"] = true,
+    ["BandagePack"] = true,
+    ["Battery"] = true,
+    ["BatteryPack"] = true,
+    ["Bread"] = true,
+    ["Bulklight"] = true,
+    ["Candle"] = true,
+    ["Cheese"] = true,
+    ["Compass"] = true,
+    ["Crucifix"] = true,
+    ["Donut"] = true,
+    ["Flashlight"] = true,
+    ["Glowsticks"] = true,
+    ["GweenSoda"] = true,
+    ["Lantern"] = true,
+    ["LaserPointer"] = true,
+    ["Lighter"] = true,
+    ["Lockpick"] = true,
+    ["Multitool"] = true,
+    ["RiftCandle"] = true,
+    ["RiftJar"] = true,
+    ["RiftSmoothie"] = true,
+    ["Shakelight"] = true,
+    ["Shears"] = true,
+    ["SkeletonKey"] = true,
+    ["Smoothie"] = true,
+    ["StarBottle"] = true,
+    ["StarJug"] = true,
+    ["StarVial"] = true,
+    ["Straplight"] = true,
+    ["TipJar"] = true,
+    ["Vitamins"] = true
+}
+
+-- Memoria caché para los objetos activos en el mapa
+local objetosActivos = {}
+
+-- =============================================================================
+-- 🔮 LÓGICA DEL ESP CORREGIDA (CERO TEXTOS AQUÍ PARA EVITAR INVISIBILIDAD)
+-- =============================================================================
+local function aplicarHighlightLimpio(modelo)
+    if not modelo:IsA("Model") then return end
+    task.wait(0.1) -- Espera corta de carga
+    
+    -- 1. Buscamos el nombre limpio que usa tu menú (ej: "Figure")
+    local nombreMenu = nombresJuego[modelo.Name]
+    if not nombreMenu then return end
+
+    -- Determinamos cuál es el objeto interno que llevará los efectos visuales
+    local objetivoVisual = modelo
+    
+    if modelo.Name == "RushMoving" then
+        local bloqueInterno = modelo:FindFirstChild("RushMoving") or modelo:FindFirstChildWhichIsA("BasePart", true)
+        if bloqueInterno then
+            if (_G.EntidadesESP and _G.EntidadesSeleccionadas[nombreMenu]) or (_G.TextoESP_Config and _G.TextoESP_Config["Entidades"]) then
+                bloqueInterno.Transparency = 0
+            end
+            objetivoVisual = bloqueInterno
+        end
+    elseif modelo.Name == "AmbushMoving" then
+        local bloqueInterno = modelo:FindFirstChild("AmbushMoving") or modelo:FindFirstChildWhichIsA("BasePart", true)
+        if bloqueInterno then
+            if (_G.EntidadesESP and _G.EntidadesSeleccionadas[nombreMenu]) or (_G.TextoESP_Config and _G.TextoESP_Config["Entidades"]) then
+                bloqueInterno.Transparency = 0
+            end
+            objetivoVisual = bloqueInterno
+        end
+    elseif modelo.Name == "Eyes" then
+        local core = modelo:FindFirstChild("Core")
+        if core and core:IsA("BasePart") then
+            if (_G.EntidadesESP and _G.EntidadesSeleccionadas[nombreMenu]) or (_G.TextoESP_Config and _G.TextoESP_Config["Entidades"]) then
+                core.Transparency = 0
+            end
+            objetivoVisual = core
+        end
+    elseif modelo.Name == "FigureRig" then
+        local root = modelo:FindFirstChild("Root")
+        if root and root:IsA("BasePart") then root.Transparency = 1 end
+    end
+
+    -- Guardamos la referencia física en la caché para que el nuevo bucle maestro la controle
+    entidadesActivas[modelo] = objetivoVisual
+
+    --------------------------------------------------------
+    -- 🛑 GESTIÓN INDEPENDIENTE DEL HIGHLIGHT (CONTORNO) --
+    --------------------------------------------------------
+    local h = objetivoVisual:FindFirstChild("EntidadHighlight")
+    
+    if not _G.EntidadesESP or _G.EntidadesSeleccionadas[nombreMenu] ~= true then 
+        if h then h:Destroy() end
+    else
+        if not h then
+            h = Instance.new("Highlight")
+            h.Name = "EntidadHighlight"
+            h.OutlineColor = Color3.fromRGB(255, 255, 255) 
+            h.FillTransparency = 0.4
+            h.OutlineTransparency = 0
+            h.Adornee = objetivoVisual 
+            h.Parent = objetivoVisual
+        end
+        h.Enabled = true
+        h.FillColor = _G.ColorEntidades
+    end
+    --------------------------------------------------------
+    -- 🧹 LIMPIEZA FINAL DE TRANSPARENCIAS               --
+    --------------------------------------------------------
+    local tieneHighlight = objetivoVisual:FindFirstChild("EntidadHighlight") ~= nil
+    local tieneTexto = objetivoVisual:FindFirstChild("EntidadTexto") ~= nil
+
+    if not tieneHighlight and not tieneTexto then
+        if modelo.Name == "RushMoving" or modelo.Name == "AmbushMoving" or modelo.Name == "Eyes" then
+            objetivoVisual.Transparency = 1
+        end
+    end
+end
+
+-- Función para refrescar estados generales (Toggle y Dropdown)
+function actualizarEntidadesExistentes()
+    for _, desc in pairs(workspace:GetDescendants()) do
+        if desc:IsA("Model") and nombresJuego[desc.Name] then
+            aplicarHighlightLimpio(desc)
+        end
+    end
+end
+
+-- ==========================================
+-- 👁️ MONITOREO DE SUB-CARPETAS EN TIEMPO REAL
+-- ==========================================
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant:IsA("Model") and nombresJuego[descendant.Name] then
+        aplicarHighlightLimpio(descendant)
+    end
+end)
+
+-- Limpieza automática de la memoria caché cuando los monstruos desaparezcan
+workspace.DescendantRemoving:Connect(function(descendant)
+    if entidadesActivas[descendant] then
+        entidadesActivas[descendant] = nil
+    end
+end)
+
+-- =============================================================================
+-- 🛡️ NUEVO BUCLE MAESTRO INTEGRADO (COMPATIBLE CON EL SLIDER DE TAMAÑO)
+-- =============================================================================
+task.spawn(function()
+    while task.wait(0.05) do -- Frecuencia de actualización rápida (0.05s)
+        if _G.TextoESP_Config and _G.TextoESP_Config["Entidades"] == true then
+            local miPersonaje = JugadorLocal.Character or workspace:FindFirstChild(JugadorLocal.Name)
+            local miRaiz = miPersonaje and miPersonaje:FindFirstChild("HumanoidRootPart")
+            
+            for modelo, objetivo in pairs(entidadesActivas) do
+                if modelo and modelo.Parent and objetivo and objetivo.Parent then
+                    local nombreMenu = nombresJuego[modelo.Name]
+                    
+                    -- 1. Buscamos o creamos el BillboardGui de forma forzada
+                    local bbGui = objetivo:FindFirstChild("EntidadTexto")
+                    if not bbGui then
+                        bbGui = Instance.new("BillboardGui")
+                        bbGui.Name = "EntidadTexto"
+                        bbGui.Size = UDim2.new(0, 250, 0, 40) -- Ancho suficiente para evitar cortes
+                        bbGui.StudsOffset = Vector3.new(0, 4, 0) 
+                        bbGui.Adornee = objetivo
+                        bbGui.Parent = objetivo
+                    end
+                    
+                    if bbGui.AlwaysOnTop ~= true then bbGui.AlwaysOnTop = true end
+                    if bbGui.Enabled ~= true then bbGui.Enabled = true end
+                    
+                    -- 2. Buscamos o creamos el ÚNICO TextLabel integrado
+                    local label = bbGui:FindFirstChild("Label")
+                    if not label then
+                        label = Instance.new("TextLabel")
+                        label.Name = "Label"
+                        label.Size = UDim2.new(1, 0, 1, 0)
+                        label.Font = Enum.Font.SourceSansBold
+                        label.TextStrokeTransparency = 0       
+                        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+                        label.Parent = bbGui
+                    end
+                    
+                    -- Quitar cualquier tipo de ocultación externa
+                    if label.Visible ~= true then label.Visible = true end
+                    if label.BackgroundTransparency ~= 1 then label.BackgroundTransparency = 1 end
+                    if label.TextTransparency ~= 0 then label.TextTransparency = 0 end
+                    
+                    -- 🌟 VINCULACIÓN CON EL SLIDER EN CALIENTE:
+                    -- Intentamos leer el valor actual del slider "Tamano" en cada fotograma
+                    local tamanoMenu = Options and Options.Tamano and Options.Tamano.Value or 20
+                    if label.TextSize ~= tamanoMenu then
+                        label.TextSize = tamanoMenu
+                    end
+                    
+                    -- 3. Sincronizar texto unificado y color en tiempo real
+                    if label then
+                        local parteEntidad = modelo:FindFirstChildWhichIsA("BasePart", true)
+                        if parteEntidad then
+                            local nombreAMostrar = nombresPersonalizados[nombreMenu] or nombreMenu or "Entidad"
+                            
+                            if label.TextColor3 ~= _G.ColorEntidades then
+                                label.TextColor3 = _G.ColorEntidades
+                            end
+
+                            -- Cálculo matemático de distancia
+                            local distancia = miRaiz and (miRaiz.Position - parteEntidad.Position).Magnitude or 0
+                            local textoFinal = string.format("%s [%.1f]", nombreAMostrar, distancia)
+
+                            if label.Text ~= textoFinal then
+                                label.Text = textoFinal
+                            end
+                        end
+                    end
+                else
+                    entidadesActivas[modelo] = nil 
+                end
+            end
+        else
+            -- Si se apaga, borramos instantáneamente todos los textos
+            for _, objetivo in pairs(entidadesActivas) do
+                if objetivo then
+                    local bbGui = objetivo:FindFirstChild("EntidadTexto")
+                    if bbGui then bbGui:Destroy() end
+                end
+            end
+        end
+    end
+end)
+
+-- ==========================================
+-- 🎛️ TU INTERFAZ INTEGRADA
+-- ==========================================
+Tab3:AddToggle("CofreESP",{
+    Text = "Cofres",
+    Tooltip = "Activa la visión de los cofres",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.CofresComunesESP = Value
+        actualizarCofresComunesExistentes() 
+    end,
+}):AddColorPicker("ColorPickerCofres", {
+    Default = Color3.fromRGB(255, 255, 0), 
+    Title = "Selecciona un color",
+    Transparency = nil, -- Sin barra de transparencia
+
+    Callback = function(Value)
+        _G.ColorCofresComunes = Value
+        
+        -- ⚡ Cambio de color instantáneo mediante caché (Cero Lag)
+        if _G.CofresComunesESP then
+            for _, objetoCofre in pairs(cofresComunesActivos) do
+                if objetoCofre and objetoCofre.Parent then
+                    local h = objetoCofre:FindFirstChild("CofreComunHighlight")
+                    if h then
+                        h.FillColor = Value
+                    end
+                else
+                    cofresComunesActivos[objetoCofre] = nil
+                end
+            end
+        end
+    end,
+})
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL PARA COFRES CON LLAVE
+-- ==========================================
+_G.CofresConLlaveESP = false
+_G.ColorCofresConLlave = Color3.fromRGB(100, 100, 0) -- Color por defecto
+
+-- Memoria caché para los cofres bloqueados activos en el mapa
+local cofresConLlaveActivos = {}
+
+-- ==========================================
+-- 🔮 LÓGICA PRINCIPAL DEL ESP DE COFRES
+-- ==========================================
+local function aplicarCofresConLlaveESP(objeto)
+    if objeto.Name ~= "ChestBoxLocked" then return end
+    task.wait(0.1) -- Espera corta para carga
+
+    -- Guardamos en la memoria caché
+    cofresConLlaveActivos[objeto] = objeto
+
+    -- 🔴 SI SE DESACTIVA EL TOGGLE: Eliminar Highlight de inmediato
+    if not _G.CofresConLlaveESP then
+        local hViejo = objeto:FindFirstChild("CofreLockedHighlight")
+        if hViejo then hViejo:Destroy() end
+        return
+    end
+
+    -- 🛠️ INYECCIÓN / ACTUALIZACIÓN DEL HIGHLIGHT
+    local h = objeto:FindFirstChild("CofreLockedHighlight")
+    if not h then
+        h = Instance.new("Highlight")
+        h.Name = "CofreLockedHighlight"
+        h.OutlineColor = Color3.fromRGB(255, 255, 255) -- Contorno blanco
+        h.FillTransparency = 0.5
+        h.OutlineTransparency = 0
+        h.Adornee = objeto
+        h.Parent = objeto
+    end
+
+    h.Enabled = _G.CofresConLlaveESP
+    h.FillColor = _G.ColorCofresConLlave
+end
+
+-- Función para escanear y refrescar cuando tocas el Toggle
+function actualizarCofresConLlaveExistentes()
+    for _, desc in pairs(workspace:GetDescendants()) do
+        if desc.Name == "ChestBoxLocked" then
+            aplicarCofresConLlaveESP(desc)
+        end
+    end
+end
+
+-- ==========================================
+-- 👁️ MONITOREO EN TIEMPO REAL
+-- ==========================================
+workspace.DescendantAdded:Connect(function(descendant)
+    if descendant.Name == "ChestBoxLocked" then
+        aplicarCofresConLlaveESP(descendant)
+    end
+end)
+
+workspace.DescendantRemoving:Connect(function(descendant)
+    if cofresConLlaveActivos[descendant] then
+        cofresConLlaveActivos[descendant] = nil
+    end
+end)
+
+-- ==========================================
+-- 🎛️ TU INTERFAZ INTEGRADA
+-- ==========================================
+Tab3:AddToggle("CofreConLlaveESP",{
+    Text = "Cofres con llave",
+    Tooltip = "Activa la visión de los cofres con llave",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.CofresConLlaveESP = Value
+        actualizarCofresConLlaveExistentes() 
+    end,
+}):AddColorPicker("ColorPickerCofresConLlave", {
+    Default = Color3.fromRGB(100, 100, 0), 
+    Title = "Selecciona un color",
+    Transparency = nil, -- Sin barra de transparencia
+
+    Callback = function(Value)
+        _G.ColorCofresConLlave = Value
+        
+        -- ⚡ Cambio de color instantáneo mediante caché (Cero Lag)
+        if _G.CofresConLlaveESP then
+            for _, objetoCofre in pairs(cofresConLlaveActivos) do
+                if objetoCofre and objetoCofre.Parent then
+                    local h = objetoCofre:FindFirstChild("CofreLockedHighlight")
+                    if h then
+                        h.FillColor = Value
+                    end
+                else
+                    cofresConLlaveActivos[objetoCofre] = nil
+                end
+            end
+        end
+    end,
+})
+
+Tab3:AddDivider()
+
+-- ==========================================
+-- 🛠️ VARIABLES DE CONTROL PARA ESCONDITES
+-- ==========================================
+_G.EsconditesESP = false
+_G.ColorEscondites = Color3.fromRGB(0, 128, 0) -- Verde por defecto (0, 128, 0)
+
+-- Lista de nombres técnicos de los escondites en Doors
+local nombresEscondites = {
+    ["Wardrobe"] = true, 
+    ["Bed"] = true,      
+    ["Toolshed"] = true  
+}
+
+local esconditesActivos = {}
+local salasDeEscondites = {} -- Guarda el número de la habitación donde apareció cada escondite
+
+-- ==========================================
+-- 🔮 LÓGICA PRINCIPAL DEL ESP DE ESCONDITES (CORREGIDA)
+-- ==========================================
+local function aplicarEsconditesESP(objeto)
+    if not nombresEscondites[objeto.Name] then return end
+    
+    esconditesActivos[objeto] = objeto
+    
+    -- Registramos la habitación actual si no estaba guardada
+    if not salasDeEscondites[objeto] and HabitacionActual then
+        salasDeEscondites[objeto] = HabitacionActual.Value
+    end
+
+    if not _G.EsconditesESP then
+        local hViejo = objeto:FindFirstChild("EsconditeHighlight")
+        if hViejo then hViejo:Destroy() end
+        return
+    end
+
+    local h = objeto:FindFirstChild("EsconditeHighlight")
+    if not h then
+        h = Instance.new("Highlight")
+        h.Name = "EsconditeHighlight"
+        h.OutlineColor = Color3.fromRGB(255, 255, 255)
+        h.FillTransparency = 0.5
+        h.OutlineTransparency = 0
+        h.Adornee = objeto
+        h.Parent = objeto
+    end
+
+    h.Enabled = _G.EsconditesESP
+    h.FillColor = _G.ColorEscondites
+end
+
+-- Función para escanear y refrescar todos los armarios a la vez (Bloque unificado)
+function actualizarEsconditesExistentes()
+    for _, desc in pairs(workspace:GetDescendants()) do
+        if nombresEscondites[desc.Name] then
+            aplicarEsconditesESP(desc)
+        end
+    end
+end
+
+-- ==========================================
+-- 👁️ MONITOREO EN TIEMPO REAL
+-- ==========================================
+workspace.DescendantAdded:Connect(function(descendant)
+    if nombresEscondites[descendant.Name] then
+        -- Espera ultra corta solo para la generación en tiempo real
+        task.wait(0.1)
+        aplicarEsconditesESP(descendant)
+    end
+end)
+
+workspace.DescendantRemoving:Connect(function(descendant)
+    if esconditesActivos[descendant] then
+        esconditesActivos[descendant] = nil
+    end
+end)
+
+-- ==========================================
+-- 🎛️ TU INTERFAZ INTEGRADA
+-- ==========================================
+Tab3:AddToggle("EsconditesESP",{
+    Text = "Escondites",
+    Tooltip = "Activa la visión de los armarios, camas y cobertizos",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        _G.EsconditesESP = Value
+        actualizarEsconditesExistentes() -- Van todos a la vez al presionar
+    end,
+}):AddColorPicker("ColorPickerEscondites", {
+    Default = Color3.fromRGB(0, 128, 0), -- Verde (0, 128, 0)
+    Title = "Selecciona un color",
+    Transparency = nil, -- Sin barra de transparencia
+
+    Callback = function(Value)
+        _G.ColorEscondites = Value
+        
+        -- ⚡ Cambio de color instantáneo en masa mediante caché
+        if _G.EsconditesESP then
+            for _, objetoEscondite in pairs(esconditesActivos) do
+                if objetoEscondite and objetoEscondite.Parent then
+                    local h = objetoEscondite:FindFirstChild("EsconditeHighlight")
+                    if h then
+                        h.FillColor = Value
+                    end
+                else
+                    esconditesActivos[objetoEscondite] = nil
+                end
+            end
+        end
+    end,
+})
+
+local TabBox5 = Tabs.VisualesTab:AddRightTabbox("Notificaciones")
+local Tab5 = TabBox5:AddTab("Notificaciones", "scan-text")
+
+-- =============================================================================
+-- CONFIGURACIÓN Y VARIABLES GLOBALES DEL DETECTOR
+-- =============================================================================
+
+local Players = game:GetService("Players")
+local TextChatService = game:GetService("TextChatService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Variables de control asociadas a tu menú
+local AlertaNotificacionActiva = false
+local AlertaChatActiva = false
+local EntidadesSeleccionadas = {}
+local TextoPersonalizado = "ha spawneado" -- Valor inicial idéntico al Default del Input
+
+-- Función auxiliar para verificar si una entidad está seleccionada en el Dropdown
+local function entidadEstaSeleccionada(nombreEntidad)
+	return EntidadesSeleccionadas[nombreEntidad] == true
+end
+
+-- Función para lanzar las alertas según los toggles activos
+local function lanzarAlertaEntidad(entidad)
+	-- 1. Filtros esenciales de seguridad básicos
+	if not EntidadesSeleccionadas or not EntidadesSeleccionadas[entidad] then return end
+	if not AlertaNotificacionActiva and not AlertaChatActiva then return end
+
+	-- 2. Formateo del mensaje (con la regla del vacío/emojis)
+	local sufijoMensaje = TextoPersonalizado
+	if not sufijoMensaje or sufijoMensaje:gsub(" ", "") == "" then
+		sufijoMensaje = "⚠️ " .. entidad .. " ha spawneado!"
+	else
+		sufijoMensaje = "⚠️ "..entidad .. " " .. sufijoMensaje
+	end
+	local mensajeDeAlerta = sufijoMensaje
+
+	-- =============================================================================
+	-- 🔊 + 🖥️ AUDIO Y NOTIFICACIÓN VISUAL (COMPROBACIÓN ULTRA SEGURA ANTICRASHEO)
+	-- =============================================================================
+	if AlertaNotificacionActiva then
+		
+		-- [PROTECCIÓN DE CARGA]: Verificamos rigurosamente que la UI de Linoria ya exista en memoria
+		if SonidoNotificacion then
+			-- Intentamos extraer de forma segura el valor del cuadro de texto sin romper el script si aún no carga
+			local idEscrita = nil
+			pcall(function()
+				if Options and Options.SonidoDeNotificacion and Options.SonidoDeNotificacion.Value then
+					idEscrita = Options.SonidoDeNotificacion.Value
+				end
+			end)
+
+			-- Si logramos leer un número válido en la caja, se lo aplicamos al sonido principal
+			if idEscrita and idEscrita ~= "" then
+				SonidoNotificacion.SoundId = "rbxassetid://" .. tostring(idEscrita)
+			end
+			
+			-- Reproduce el audio configurado
+			SonidoNotificacion:Play()
+		end
+
+		-- Lanzamos inmediatamente la notificación visual en pantalla (Usa pcall por si la librería no ha terminado de iniciar)
+		pcall(function()
+			if Library and Library.Notify then
+				Library:Notify(mensajeDeAlerta, 5)
+			end
+		end)
+	end
+
+	-- =============================================================================
+	-- 💬 ALERTA DE CHAT PÚBLICO
+	-- =============================================================================
+	if AlertaChatActiva then
+		local TextChatService = game:GetService("TextChatService")
+		if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+			local generalChannel = TextChatService:FindFirstChild("TextChannels") and TextChatService.TextChannels:FindFirstChild("RBXGeneral")
+			if generalChannel then
+				generalChannel:SendAsync(mensajeDeAlerta)
+			end
+		else
+			local replicatedStorage = game:GetService("ReplicatedStorage")
+			local defaultChatSystemChatEvents = replicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+			local sayMessageRequest = defaultChatSystemChatEvents and defaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
+			if sayMessageRequest then
+				sayMessageRequest:FireServer(mensajeDeAlerta, "All")
+			end
+		end
+	end
+end
+
+-- =============================================================================
+-- CONEXIÓN DIRECTA CON TUS COMPONENTES DE LA INTERFAZ
+-- =============================================================================
+
+local Toggle5 = Tab5:AddToggle("ListaDeEntidadesNotificacion",{
+	Text = "Notificaciones",
+	Tooltip = "Cuando haya una entidad saldrá una notificación",
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+	Callback = function(Value)
+		AlertaNotificacionActiva = Value
+		
+		-- task.defer evita crasheos de inicialización
+		task.defer(function()
+			-- Si 'Value' es true (activado), 'Disabled' será false (no gris)
+			-- Si 'Value' es false (desactivado), 'Disabled' será true (grisáceo)
+			local estadoGris = not Value
+			
+			if Toggles and Toggles["NotificaciónDeChat"] then
+				Toggles["NotificaciónDeChat"]:SetDisabled(estadoGris)
+			end
+			
+			if Options and Options["ListaDeEntidades"] then
+				Options["ListaDeEntidades"]:SetDisabled(estadoGris)
+			end
+			
+			if Options and Options["TextoDeNotificacion"] then
+				Options["TextoDeNotificacion"]:SetDisabled(estadoGris)
+			end
+		end)
+	end
+})
+
+Toggle5:SetValue(false)
+
+local Toggle6 = Tab5:AddToggle("NotificaciónDeChat",{
+	Text = "Notificación de chat",
+	Tooltip = "Cuando haya una entidad el jugador dirá por el chat un mensaje de alerta",
+	Default = false,
+	Disabled = true, -- 🔘 Cambiado a true para que empiece gris
+	Visible = true,  -- Debe ser true para que se pueda ver en gris
+	Risky = false,
+	Callback = function(Value)
+		AlertaChatActiva = Value
+	end
+})
+
+local Dropdown4 = Tab5:AddDropdown("ListaDeEntidades", {
+	Values = {"Rush", "Ambush", "Eyes", "Sally"},
+	Default = {},
+	Multi = true,
+	Text = "Lista de entidades",
+	Tooltip = "Elige las entidades a incluir",
+	Disabled = true, -- 🔘 Cambiado a true para que empiece gris
+	Visible = true,
+	Callback = function(Value)
+		EntidadesSeleccionadas = Value
+	end,
+})
+
+Tab5:AddDivider(" Ajustes ")
+
+-- En tu pestaña de Ajustes (Tab5), el input del mensaje:
+Tab5:AddInput("TextoDeNotificacion", {
+	Default = "ha spawneado",
+	Numeric = false,
+	Finished = true,
+	ClearTextOnFocus = false,
+	Text = "Mensaje de notificación",
+	Tooltip = "Elige que decir cuando haya una entidad",
+	Placeholder = "Escribe un mensaje aquí",
+	Disabled = true, -- 🔘 Cambiado a true para que empiece gris
+	Visible = true,
+	Callback = function(Value)
+		TextoPersonalizado = Value
+	end,
+})
+
+Tab5:AddInput("SonidoDeNotificacion", {
+	Default = "4590662766",
+	Numeric = true,
+	Finished = false,
+	ClearTextOnFocus = false,
+
+	Text = "Sonido de notificación",
+	Tooltip = "Elige que sonido reproducir cuando haya una notificación",
+	Placeholder = "ID",
+
+	Callback = function(Value)
+		-- Guardamos el valor de forma segura sin tocar objetos que no hayan cargado
+		if Value and Value ~= "" then
+			-- Si el objeto físico ya existe en el juego, le actualizamos la ID en tiempo real
+			if SonidoNotificacion and typeof(SonidoNotificacion) == "Instance" then
+				SonidoNotificacion.SoundId = "rbxassetid://" .. tostring(Value)
+                SonidoNotificacion:Play()
+			end
+		end
+	end,
+})
+
+-- =============================================================================
+-- DETECTOR OPTIMIZADO Y CORREGIDO (CON NOMBRES TÉCNICOS REALES DE DOORS)
+-- =============================================================================
+local objetosProcesados = {}
+
+-- Tabla de traducción idéntica a la que usas en tu ESP exitoso
+local nombresMonstruosJuego = {
+    ["RushMoving"] = "Rush",
+    ["AmbushMoving"] = "Ambush",
+    ["FigureRig"] = "Figure",
+    ["Eyes"] = "Eyes",
+    ["SallyMoving"] = "Sally"
+}
+
+local function procesarDeteccionSegura(objeto)
+	-- 🛑 SI AMBOS TOGGLES ESTÁN APAGADOS, SE DETIENE LA DETECCIÓN DE INMEDIATO
+	if not AlertaNotificacionActiva and not AlertaChatActiva then 
+		return 
+	end
+
+	if not objeto:IsA("Model") then return end
+
+	-- Comprobamos si el modelo que apareció coincide con un monstruo real de Doors
+	local entidadMenu = nombresMonstruosJuego[objeto.Name]
+	
+	if entidadMenu then
+		-- Comprobación: ¿La entidad está activa en tu Dropdown del menú?
+		if EntidadesSeleccionadas and EntidadesSeleccionadas[entidadMenu] == true then
+			
+			-- Filtro anti-duplicados y anti-spam
+			if objetosProcesados[objeto] or (objeto.Parent and objetosProcesados[objeto.Parent]) then 
+				return 
+			end
+			
+			-- Registramos la instancia física
+			objetosProcesados[objeto] = true
+			
+			local conexionDestroy
+			conexionDestroy = objeto.Destroying:Connect(function()
+				objetosProcesados[objeto] = nil
+				if conexionDestroy then conexionDestroy:Disconnect() end
+			end)
+			
+			-- Enviamos a la función de alertas con el nombre correcto para el menú
+			lanzarAlertaEntidad(entidadMenu)
+		end
+	end
+end
+
+-- Hilos de escucha profunda en segundo plano
+task.spawn(function()
+	-- 1. Detector en todo el Workspace
+	workspace.DescendantAdded:Connect(function(objeto)
+		procesarDeteccionSegura(objeto)
+	end)
+
+	-- 2. Detector en CurrentRooms
+	local currentRooms = workspace:WaitForChild("CurrentRooms", 10)
+	if currentRooms then
+		-- Escaneo inicial profundo
+		for _, objeto in ipairs(currentRooms:GetDescendants()) do
+			procesarDeteccionSegura(objeto)
+		end
+
+		-- Escaneo activo en tiempo real
+		currentRooms.DescendantAdded:Connect(function(objeto)
+			procesarDeteccionSegura(objeto)
+		end)
+	end
+end)
+
+local TabBox9 = Tabs.VisualesTab:AddRightTabbox()
+local Tab4 = TabBox9:AddTab("Ajustes ESP", "settings")
+
+-- =============================================================================
+-- 🛠️ 1. CONFIGURACIÓN GLOBAL Y MEMORIA DEL ESP
+-- =============================================================================
+_G.TextoESP_Config = {
+	["Entidades"] = false,
+	["Jugadores"] = false,
+	["Puertas"] = false,
+	["Objetivos"] = false,
+	["Oro"] = false,
+	["Objetos"] = false,
+	["Cofres"] = false,
+	["Cofres Con Llave"] = false,
+	["Escondites"] = false
+}
+
+-- =============================================================================
+-- 🎛️ CORRECCIÓN DE TOGGLES PARA PUERTAS Y ENTIDADES (TEXTOS ACTIVADOS)
+-- =============================================================================
+
+Tab4:AddToggle("TextoESP", {
+	Text = "Activar texto puertas",
+	Tooltip = "Muestra la distancia y el número de la siguiente puerta",
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+	Callback = function(Value)
+		-- Sincronizamos con la configuración que lee el bucle de renderizado de puertas
+		if _G.TextoESP_Config then
+			_G.TextoESP_Config["Puertas"] = Value
+		end
+		-- Forzamos la actualización visual de la habitación
+		if actualizarHabitacionActual then
+			actualizarHabitacionActual()
+		end
+	end
+})
+
+Tab4:AddToggle("EntidadesTexto", {
+	Text = "Activar texto entidades",
+	Tooltip = "Muestra los nombres y distancia en studs de los monstruos",
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+	Callback = function(Value)
+		-- Sincronizamos con el bucle maestro de entidades que tienes más arriba
+		if _G.TextoESP_Config then
+			_G.TextoESP_Config["Entidades"] = Value
+		end
+	end
+})
+
+Tab4:AddSlider("Tamano", {
+    Text = "Tamaño",
+    Default = 20,
+    Min = 1,
+    Max = 100,
+    Rounding = 0,
+
+    Callback = function(Value)
+        -- 🌟 Forzar actualización inmediata del tamaño en la etiqueta si la puerta está renderizada
+        pcall(function()
+            local bbGui = ScreenGui:FindFirstChild("DoorTexto")
+            local label = bbGui and bbGui:FindFirstChild("Label")
+            if label then
+                label.TextSize = Value
+            end
+        end)
+    end,
+
+    Disabled = false
+})
+
+-- =============================================================================
+-- DETECTOR DE CAMBIO DE HABITACIÓN (CONSERVACIÓN DE SALA ANTERIOR - OPTIMIZADO)
+-- =============================================================================
+HabitacionActual.Changed:Connect(function(nuevaHabitacion)
+    -- 🚪 NUEVA LÓGICA ULTRA SEGURA PARA PUERTAS
+    task.wait(0.05) -- Margen prudencial anti-telemetría
+    if actualizarHabitacionActual then
+        actualizarHabitacionActual()
+    end
+
+    -- 🧹 LIMPIEZA DE ESCONDITES ULTRA-CONSERVADORA (Mantiene intacta tu lógica original)
+    local limiteDeBorrado = nuevaHabitacion - 3
+
+    for objeto, salaOrigen in pairs(salasDeEscondites) do
+        if salaOrigen <= limiteDeBorrado then
+            if objeto and objeto.Parent then
+                local h = objeto:FindFirstChild("EsconditeHighlight")
+                if h then 
+                    h:Destroy() 
+                end
+            end
+            -- Liberamos memoria quitándolos de las tablas
+            esconditesActivos[objeto] = nil
+            salasDeEscondites[objeto] = nil
+        end
+    end
+end)
+
+-- Variables de control
+local activado = false
+local nivelTransparencia = 0.5
+local ultimoEscondite = nil
+local transparenciasOriginales = {}
+local hidingConnection = nil
+
+-- Referencia para el Slider
+local SliderTransparenciaObj = nil
+
+-- Función auxiliar para restaurar la transparencia original
+local function restaurarEscondite()
+    if ultimoEscondite then
+        for part, transOriginal in pairs(transparenciasOriginales) do
+            if part and part.Parent then
+                part.Transparency = transOriginal
+            end
+        end
+        transparenciasOriginales = {}
+        ultimoEscondite = nil
+    end
+end
+
+-- Función principal para aplicar la transparencia
+local function actualizarTransparenciaEscondite()
+    if not activado then
+        restaurarEscondite()
+        return
+    end
+
+    local jugadorFisico = LocalPlayer.Character
+    if not jugadorFisico then 
+        restaurarEscondite()
+        return 
+    end
+
+    -- Verificamos el atributo "Hiding"
+    local estaEscondido = jugadorFisico:GetAttribute("Hiding")
+
+    if estaEscondido then
+        local currentRooms = Workspace:FindFirstChild("CurrentRooms")
+        if not currentRooms then return end
+
+        local esconditeEncontrado = nil
+
+        -- Buscamos el escondite actual del jugador
+        for _, room in ipairs(currentRooms:GetChildren()) do
+            for _, objeto in ipairs(room:GetDescendants()) do
+                local hiddenPlayer = objeto:FindFirstChild("HiddenPlayer")
+                if hiddenPlayer then
+                    local val = hiddenPlayer.Value
+                    if tostring(val) == LocalPlayer.Name or val == LocalPlayer.UserId or val == LocalPlayer or val == jugadorFisico then
+                        esconditeEncontrado = objeto:IsA("Model") and objeto or objeto.Parent
+                        break
+                    end
+                end
+            end
+            if esconditeEncontrado then break end
+        end
+
+        if esconditeEncontrado then
+            if ultimoEscondite and ultimoEscondite ~= esconditeEncontrado then
+                restaurarEscondite()
+            end
+
+            ultimoEscondite = esconditeEncontrado
+
+            -- Guardamos transparencias originales y aplicamos la del slider
+            for _, part in ipairs(esconditeEncontrado:GetDescendants()) do
+                if part:IsA("BasePart") then
+                    if transparenciasOriginales[part] == nil then
+                        transparenciasOriginales[part] = part.Transparency
+                    end
+                    part.Transparency = nivelTransparencia
+                end
+            end
+        end
+    else
+        -- Si dejó de esconderse, restauramos
+        restaurarEscondite()
+    end
+end
+
+-- Función para escuchar cambios en el atributo "Hiding" del personaje
+local function conectarDeteccionPersonaje(character)
+    if not character then return end
+
+    if hidingConnection then
+        hidingConnection:Disconnect()
+        hidingConnection = nil
+    end
+
+    hidingConnection = character:GetAttributeChangedSignal("Hiding"):Connect(function()
+        actualizarTransparenciaEscondite()
+    end)
+
+    actualizarTransparenciaEscondite()
+end
+
+-- Conectamos al personaje actual y en Respawn
+if LocalPlayer.Character then
+    conectarDeteccionPersonaje(LocalPlayer.Character)
+end
+
+LocalPlayer.CharacterAdded:Connect(function(newChar)
+    conectarDeteccionPersonaje(newChar)
+end)
+
+-- =================================================================
+-- 🎛️ CONTROLES LINORIALIB (TAB4)
+-- =================================================================
+
+-- 1. TOGGLE PRINCIPAL (PRIMERO)
+Tab4:AddToggle("TransparenciaEscondite", {
+    Text = "Escondites Transparentes",
+    Tooltip = "Te permite ver a través de los escondites de forma cómoda",
+    Default = false,
+    Disabled = false,
+    Visible = true,
+    Risky = false,
+
+    Callback = function(Value)
+        activado = Value
+
+        -- Cambiamos el estado Disabled del Slider
+        if SliderTransparenciaObj then
+            SliderTransparenciaObj:SetDisabled(not Value)
+        end
+
+        actualizarTransparenciaEscondite()
+    end
+})
+
+-- 2. SLIDER (DEBAJO DEL TOGGLE, COMIENZA DESACTIVADO)
+SliderTransparenciaObj = Tab4:AddSlider("SliderTransparencia", {
+    Text = "Ajustar Transparencia",
+    Tooltip = "Ajusta la transparencia del escondite",
+    Default = 0.5,
+    Min = 0,
+    Max = 1,
+    Rounding = 1,
+    Disabled = true, -- Comienza desactivado
+
+    Callback = function(Value)
+        nivelTransparencia = Value
+        actualizarTransparenciaEscondite()
+    end
+})
+
+-- =================================================================
+-- 1. SERVICIOS Y VARIABLES
+-- =================================================================
+
+local CoreGui = game:GetService("CoreGui")
+
+local rainbowActivo = false
+local hue = 0
+local velocidadArcoiris = 0.25
+local colorActualArcoiris = Color3.fromHSV(0, 0.8, 1)
+
+-- Guardará la referencia del Highlight y sus colores originales
+local highlightsRegistrados = {}
+
+-- =================================================================
+-- 2. DETECCIÓN Y REGISTRO DE HIGHLIGHTS
+-- =================================================================
+local function registrarHighlight(instancia)
+    if instancia:IsA("Highlight") and not highlightsRegistrados[instancia] then
+        -- Guardamos la instancia junto a sus colores originales
+        highlightsRegistrados[instancia] = {
+            FillColor = instancia.FillColor,
+            OutlineColor = instancia.OutlineColor
+        }
+
+        instancia.Destroying:Connect(function()
+            highlightsRegistrados[instancia] = nil
+        end)
+    end
+end
+
+Workspace.DescendantAdded:Connect(registrarHighlight)
+
+if LocalPlayer then
+    local playerGui = LocalPlayer:WaitForChild("PlayerGui", 5)
+    if playerGui then
+        playerGui.DescendantAdded:Connect(registrarHighlight)
+        for _, desc in ipairs(playerGui:GetDescendants()) do
+            registrarHighlight(desc)
+        end
+    end
+end
+
+pcall(function()
+    CoreGui.DescendantAdded:Connect(registrarHighlight)
+    for _, desc in ipairs(CoreGui:GetDescendants()) do
+        registrarHighlight(desc)
+    end
+end)
+
+for _, desc in ipairs(Workspace:GetDescendants()) do
+    registrarHighlight(desc)
+end
+
+-- =================================================================
+-- 3. RESTAURACIÓN DE COLORES
+-- =================================================================
+local function restaurarColoresOriginales()
+    for highlight, coloresOriginales in pairs(highlightsRegistrados) do
+        if highlight and highlight.Parent then
+            highlight.FillColor = coloresOriginales.FillColor
+            highlight.OutlineColor = coloresOriginales.OutlineColor
+        else
+            highlightsRegistrados[highlight] = nil
+        end
+    end
+end
+
+-- =================================================================
+-- 4. BUCLE DE ANIMACIÓN
+-- =================================================================
+RunService.RenderStepped:Connect(function(deltaTime)
+    if not rainbowActivo then return end
+
+    hue = (hue + (deltaTime * velocidadArcoiris)) % 1
+    colorActualArcoiris = Color3.fromHSV(hue, 0.8, 1)
+
+    for highlight, _ in pairs(highlightsRegistrados) do
+        if highlight and highlight.Parent then
+            highlight.FillColor = colorActualArcoiris
+            highlight.OutlineColor = colorActualArcoiris
+        else
+            highlightsRegistrados[highlight] = nil
+        end
+    end
+end)
+
+-- =================================================================
+-- 5. CONTROL EN LA INTERFAZ (TOGGLE)
+-- =================================================================
+Tab4:AddToggle("RainbowHighlightsToggle", {
+    Text = "Resaltado Arcoíris",
+    Default = false,
+    Tooltip = "Activa/Desactiva el efecto arcoíris en todos los Highlights",
+    Callback = function(Value)
+        rainbowActivo = Value
+        
+        -- Si se apaga, restaura los colores originales inmediatamente
+        if not Value then
+            restaurarColoresOriginales()
+        end
+    end
+})
+
+local TabBox6 = Tabs.VisualesTab:AddLeftGroupbox("Ambiente", "cloud")
+
+_G.FullBrightExecuted = _G.FullBrightExecuted or false
+_G.FullBrightEnabled = false
+_G.FullBrightColor = Color3.fromRGB(255,255,255)
+
+local NormalSettings = {
+	Brightness = Lighting.Brightness,
+	ClockTime = Lighting.ClockTime,
+	FogEnd = Lighting.FogEnd,
+	GlobalShadows = Lighting.GlobalShadows,
+	Ambient = Lighting.Ambient
+}
+
+local function ApplyFullBright()
+	Lighting.Brightness = 1
+	Lighting.ClockTime = 12
+	Lighting.FogEnd = 786543
+	Lighting.GlobalShadows = false
+	Lighting.Ambient = _G.FullBrightColor
+end
+
+local function RestoreLighting()
+	Lighting.Brightness = NormalSettings.Brightness
+	Lighting.ClockTime = NormalSettings.ClockTime
+	Lighting.FogEnd = NormalSettings.FogEnd
+	Lighting.GlobalShadows = NormalSettings.GlobalShadows
+	Lighting.Ambient = NormalSettings.Ambient
+end
+
+-- UI
+local TabBox7 = TabBox6:AddToggle("IluminacionMaxima",{
+	Text = "Iluminación máxima",
+	Tooltip = "Activa la iluminación máxima",
+	Default = false,
+
+	Callback = function(Value)
+		_G.FullBrightEnabled = Value
+
+		if Value then
+			ApplyFullBright()
+		else
+			RestoreLighting()
+		end
+	end,
+})
+
+TabBox7:AddColorPicker("ColorPickerIluminacionMaxima", {
+	Default = _G.FullBrightColor,
+	Title = "Selecciona un color",
+
+	Callback = function(Value)
+		_G.FullBrightColor = Value
+
+		if _G.FullBrightEnabled then
+			Lighting.Ambient = Value
+		end
+	end,
+})
+
+-- Mantener activo si lo cambian en el juego
+game:GetService("RunService").RenderStepped:Connect(function()
+	if _G.FullBrightEnabled then
+		Lighting.Brightness = 1
+		Lighting.ClockTime = 12
+		Lighting.FogEnd = 786543
+		Lighting.GlobalShadows = false
+		Lighting.Ambient = _G.FullBrightColor
+	end
+end)
+
+local originalFogEnd = Lighting.FogEnd
+local originalFogStart = Lighting.FogStart
+local originalGlobalShadows = Lighting.GlobalShadows
+
+TabBox6:AddToggle("AntiNiebla", {
+	Text = "Anti niebla",
+	Tooltip = "Elimina la niebla",
+
+	Default = false,
+	Disabled = false,
+	Visible = true,
+	Risky = false,
+
+	Callback = function(value)
+		if value then
+			Lighting.FogEnd = 100000
+			Lighting.FogStart = 0
+			Lighting.GlobalShadows = false
+		else
+			-- Restaurar valores originales
+			Lighting.FogEnd = originalFogEnd
+			Lighting.FogStart = originalFogStart
+			Lighting.GlobalShadows = originalGlobalShadows
+		end
+	end
+})
+
+TabBox6:AddButton("AntiLag",{
+	Text = "Anti lag",
+	Tooltip = "Elimina el lag",
+	
+	Func = function()
+		loadstring(game:HttpGet("https://pastebin.com/raw/djKa8a7D"))()
+	end,
+})
+
+-- Scripts Tab
+
+loadstring(game:HttpGet(Repo.."cmNjq04V"))()
+
+-- AJUSTES
+
+local MenuGroup = Tabs.AjustesTab:AddLeftGroupbox("Menú", "wrench")
+
+local UserInputService = game:GetService("UserInputService")
+local EsTactil = UserInputService.TouchEnabled -- Devuelve true si es Móvil o Tablet
+
+MenuGroup:AddToggle("OcultarBoton", {
+    Default = false,
+    Text = "Ocultar Botón",
+    Disabled = EsTactil, -- Se desactiva si el dispositivo es táctil
+    Tooltip = "Oculta el botón superior para tener una pantalla más limpia (no disponible en dispositivos táctiles)"
+    Callback = function(value)
+        local gui = game:GetService("CoreGui"):FindFirstChild("BotonPanelGui")
+        if gui then
+            gui.Enabled = not value
+        end
+    end,
+})
+
+MenuGroup:AddToggle("ShowCustomCursor", {
+	Text = "Cursor customizable",
+	Default = false,
+	Callback = function(Value)
+		Library.ShowCustomCursor = Value
+	end,
+})
+MenuGroup:AddDropdown("NotificationSide", {
+    Values = { "Izquierda", "Derecha" }, -- Las opciones que verá el usuario en español
+    Default = "Derecha",
+
+    Text = "Sentido de notificación",
+
+    Callback = function(Value)
+        -- Traducimos el valor seleccionado al inglés antes de mandarlo a la librería original
+        if Value == "Izquierda" then
+            Library:SetNotifySide("Left")
+        else
+            Library:SetNotifySide("Right")
+        end
+    end,
+})
+MenuGroup:AddDropdown("DPIDropdown", {
+	Values = { "50%", "75%", "100%", "125%", "150%", "175%", "200%" },
+	Default = "100%",
+
+	Text = "Resolución",
+
+	Callback = function(Value)
+		Value = Value:gsub("%%", "")
+		local DPI = tonumber(Value)
+
+		Library:SetDPIScale(DPI)
+	end,
+})
+
+MenuGroup:AddSlider("UICornerSlider", {
+	Text = "Curvación de las esquinas",
+	Default = Library.CornerRadius,
+	Min = 0,
+	Max = 30,
+	Rounding = 0,
+	Callback = function(value)
+		Window:SetCornerRadius(value)
+	end
+})
+
+MenuGroup:AddDivider()
+MenuGroup:AddLabel("Menu bind")
+	:AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
+
+MenuGroup:AddButton("Unload", {
+    Text = "Eliminar script (GUI)",
+    Tooltip = "Elimina el menú por completo", -- Opcional: puedes quitar esta línea si no quieres descripción
+
+    Func = function()
+        Library:Unload()
+    end,
+})
+Library.ToggleKeybind = Options.MenuKeybind -- Allows you to have a custom keybind for the menu
+
+-- Addons:
+-- SaveManager (Allows you to have a configuration system)
+-- ThemeManager (Allows you to have a menu theme system)
+
+-- Hand the library over to our managers
+ThemeManager:SetLibrary(Library)
+SaveManager:SetLibrary(Library)
+
+-- Ignore keys that are used by ThemeManager.
+-- (we dont want configs to save themes, do we?)
+SaveManager:IgnoreThemeSettings()
+
+-- Adds our MenuKeybind to the ignore list
+-- (do you want each config to have a different menu key? probably not.)
+SaveManager:SetIgnoreIndexes({ "MenuKeybind" })
+
+-- use case for doing it this way:
+-- a script hub could have themes in a global folder
+-- and game configs in a separate folder per game
+ThemeManager:SetFolder("MyScriptHub")
+SaveManager:SetFolder("MyScriptHub/specific-game")
+SaveManager:SetSubFolder("specific-place") -- if the game has multiple places inside of it (for example: DOORS)
+-- you can use this to save configs for those places separately
+-- The path in this script would be: MyScriptHub/specific-game/settings/specific-place
+-- [ This is optional ]
+
+-- Builds our config menu on the right side of our tab
+SaveManager:BuildConfigSection(Tabs.AjustesTab)
+
+-- Builds our theme menu (with plenty of built in themes) on the left side
+-- NOTE: you can also call ThemeManager:ApplyToGroupbox to add it to a specific groupbox
+ThemeManager:ApplyToTab(Tabs.AjustesTab)
+
+-- You can use the SaveManager:LoadAutoloadConfig() to load a config
+-- which has been marked to be one that auto loads!
+SaveManager:LoadAutoloadConfig()
+
+Library:OnUnload(function()
+    game:FindFirstChild("CoreGui"):FindFirstChild("BotonPanelGui"):Destroy()
+	print("El script ha sido descargado con éxito del cliente de "..JugadorLocal.Name)
+end)
+
+Library:Notify("Script ejecutado correctamente")
+SonidoNotificacion:Play()
